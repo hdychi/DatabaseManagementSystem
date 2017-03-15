@@ -72,6 +72,10 @@ public class UpdateStudentActivity extends Activity{
                 updateID(stdId.getText().toString());
                 updateName(stdName.getText().toString());
                 updateGender(stdGender.getText().toString());
+                updateAge(Integer.valueOf(stdAge.getText().toString()));
+                updateYear(Integer.valueOf(stdYear.getText().toString()));
+                updateClass(stdClass.getText().toString());
+                finish();
             }
         });
     }
