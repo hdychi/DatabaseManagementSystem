@@ -87,7 +87,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.IViewH
     public int getItemCount() {
         return mItems.size();
     }
-    static class IViewHolder extends RecyclerView.ViewHolder {
+    public static class IViewHolder extends RecyclerView.ViewHolder {
 
         public IViewHolder(View itemView) {
             super(itemView);

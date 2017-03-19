@@ -4,15 +4,27 @@ import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.administrator.databasemanagementsystem.DataBaseHelper;
 import com.example.administrator.databasemanagementsystem.Models.ChooseCourse;
+import com.example.administrator.databasemanagementsystem.Models.DataBean;
+import com.example.administrator.databasemanagementsystem.Models.RecyclerItem;
+import com.example.administrator.databasemanagementsystem.Models.Student;
 import com.example.administrator.databasemanagementsystem.R;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.StreamHandler;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Administrator on 2017/3/14.
@@ -69,13 +81,44 @@ public class UpdateStudentActivity extends Activity{
         comfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateID(stdId.getText().toString());
-                updateName(stdName.getText().toString());
-                updateGender(stdGender.getText().toString());
-                updateAge(Integer.valueOf(stdAge.getText().toString()));
-                updateYear(Integer.valueOf(stdYear.getText().toString()));
-                updateClass(stdClass.getText().toString());
-                finish();
+               Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+                   @Override
+                   public void call(Subscriber<? super String> subscriber) {
+                       updateID(stdId.getText().toString());
+                       updateName(stdName.getText().toString());
+                       updateGender(stdGender.getText().toString());
+                       updateAge(Integer.valueOf(stdAge.getText().toString()));
+                       updateYear(Integer.valueOf(stdYear.getText().toString()));
+                       updateClass(stdClass.getText().toString());
+                       subscriber.onNext("数据更新");
+                   }
+               });
+                Subscriber<String> subscriber = new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if(e instanceof IOException){
+                            Log.i("IOE","EXception");
+
+                        }
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                       finish();
+                    }
+                } ;
+                observable.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(subscriber);
+
+
+
             }
         });
     }

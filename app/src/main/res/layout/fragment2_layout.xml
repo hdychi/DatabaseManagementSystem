@@ -7,7 +7,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="20dp"
         android:paddingLeft="10dp"
-        android:text="请输入姓名/学号:"/>
+        android:text="请输入课程名/课程编号:"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="学生信息:"
+        android:text="课程信息:"
         android:paddingLeft="10dp"/>
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,22 +48,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="学生学号："/>
+            android:text="课程编号："/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/stdId"/>
+            android:id="@+id/frag2courId"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="学生姓名："/>
+            android:text="课程名称："/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/stdName"/>
+            android:id="@+id/frag2courName"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -74,22 +74,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="性别："/>
+            android:text="教师姓名："/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/stdIGender"/>
+            android:id="@+id/frag2TeacherName"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="班级："/>
+            android:text="课程学分："/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/stdClass"/>
+            android:id="@+id/frag2Credit"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -100,22 +100,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="入学年龄："/>
+            android:text="适合年级："/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/stdAge"/>
+            android:id="@+id/frag2MinGrade"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="入学年份："/>
+            android:text="取消年份："/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/stdInYear"/>
+            android:id="@+id/frag2CancelYear"/>
     </LinearLayout>
     <Button
         android:layout_width="wrap_content"
@@ -134,36 +134,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
-        android:text="已选课程："/>
+        android:text="选课学生："/>
     <android.support.v7.widget.RecyclerView
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
         android:id="@+id/recyclerView"></android.support.v7.widget.RecyclerView>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="个人加权："/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/stdGPA"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="班级加权："/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/stdClassGPA"/>
-    </LinearLayout>
+
 </LinearLayout>

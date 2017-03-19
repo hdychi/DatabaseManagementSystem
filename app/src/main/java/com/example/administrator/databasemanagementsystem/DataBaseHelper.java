@@ -20,6 +20,33 @@ public class DataBaseHelper {
     public DataBaseHelper(SQLiteDatabase database){
         mDatabase = database;
     }
+    public List<Student> getAllStudent(){
+        Cursor cursor = mDatabase.rawQuery("select * from Student",null);
+        List<Student> res = new ArrayList<>();
+        for(int i = 0;i < cursor.getCount();i++){
+            cursor.move(i);
+            res.add( new Student(cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getInt(3),cursor.getInt(4),cursor.getString(5)));
+        }
+        return  res;
+    }
+    public List<Course> getAllCourse(){
+        Cursor cursor = mDatabase.rawQuery("select * from Course",null);
+        List<Course> res = new ArrayList<>();
+        for(int i = 0;i < cursor.getCount();i++){
+            cursor.move(i);
+            res.add(new Course(cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getInt(3),cursor.getInt(4),cursor.getInt(5)));
+        }
+        return  res;
+    }
+    public List<ChooseCourse> getAllChoose(){
+        Cursor cursor = mDatabase.rawQuery("select * from ChooseCourse",null);
+        List<ChooseCourse> res = new ArrayList<>();
+        for(int i = 0;i < cursor.getCount();i++){
+            cursor.move(i);
+            res.add(new ChooseCourse(cursor.getString(0),cursor.getString(1),cursor.getInt(2),cursor.getInt(3)));
+        }
+        return  res;
+    }
     public Student getStudentWithName(String name){
         Cursor cursor = mDatabase.rawQuery("select * from Student where stdName="+"'"+name+"'",null);
         if(cursor.moveToNext()){

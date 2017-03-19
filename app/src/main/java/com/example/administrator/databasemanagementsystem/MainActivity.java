@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
                 "\t\t\t\t chooseYear integer,grade integer,\n" +
                 "                 \n" +
                 "                 constraint PKChooseCourse primary key(stdId,courId,chooseYear),\n" +
-                "\t\t\t\t constraint FKStdId foreign key(stdId) references Student(stdId),\n" +
-                "                 constraint FKCourId foreign key(courId) references Course(courId)\n" +
+                "\t\t\t\t constraint FKStdId foreign key(stdId) references Student(stdId) on delete cascade on update cascade,\n" +
+                "                 constraint FKCourId foreign key(courId) references Course(courId) on delete cascade\n" +
                 "                 )";
         database.execSQL(str1);
         database.execSQL(str2);

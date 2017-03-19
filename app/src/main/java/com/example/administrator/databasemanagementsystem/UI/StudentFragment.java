@@ -31,14 +31,16 @@ import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Administrator on 2017/3/13.
  */
 
 public class StudentFragment extends Fragment {
-     private Context mContext;
-     private View layout;
+    private Context mContext;
+    private View layout;
     private RecyclerView mRecyclerView;
     private RecyclerAdapter mAdapter;
     private Button updateButton;
@@ -97,7 +99,7 @@ public class StudentFragment extends Fragment {
     public void onActivityCreated(Bundle savadInstanceState){
        databasePath = Environment.getExternalStorageDirectory()+"/databaseManagement/"+"data.db";
        db = SQLiteDatabase.openOrCreateDatabase(databasePath,null);
-
+       getData();
    }
    public void getData(){
       Observable<DataBean> observable = Observable.create(new Observable.OnSubscribe<DataBean>() {
@@ -112,6 +114,7 @@ public class StudentFragment extends Fragment {
               bean.setItems(items);
               bean.setStdGPA(stdGPA);
               bean.setStdClassGPA(classGPA);
+              subscriber.onNext(bean);
           }
       });
      Subscriber<DataBean> subscriber = new Subscriber<DataBean>() {
@@ -142,6 +145,9 @@ public class StudentFragment extends Fragment {
            mAdapter.addAll(dataBean.getItems());
          }
      };
+     observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
    }
    public Student getStudentInformation(String idOrName){
        if(idOrName.charAt(0)<='9'&&idOrName.charAt(0)>='0'){
