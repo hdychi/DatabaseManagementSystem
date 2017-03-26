@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.util.AsyncListUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -42,7 +41,7 @@ public class StudentFragment extends Fragment {
     private Context mContext;
     private View layout;
     private RecyclerView mRecyclerView;
-    private RecyclerAdapter mAdapter;
+    private StudentRecyclerAdapter mAdapter;
     private Button updateButton;
     private Button confirmButton;
     private TextView stdId;
@@ -77,7 +76,7 @@ public class StudentFragment extends Fragment {
 
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mAdapter = new RecyclerAdapter(mContext);
+        mAdapter = new StudentRecyclerAdapter(mContext);
         mRecyclerView.setAdapter(mAdapter);
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +133,7 @@ public class StudentFragment extends Fragment {
 
          @Override
          public void onNext(DataBean dataBean) {
-           stdId.setText(dataBean.getStudent().getStdId());
+           stdId.setText(dataBean.getStudent().getStdId()==null?"":dataBean.getStudent().getStdId());
            stdName.setText(dataBean.getStudent().getStdName());
            stdAge.setText(dataBean.getStudent().getStdAge());
            stdClass.setText(dataBean.getStudent().getStdClass());
@@ -150,6 +149,7 @@ public class StudentFragment extends Fragment {
                 .subscribe(subscriber);
    }
    public Student getStudentInformation(String idOrName){
+       idOrName = idOrName.trim();
        if(idOrName.charAt(0)<='9'&&idOrName.charAt(0)>='0'){
            return new DataBaseHelper(db).getStudentWithId(idOrName);
        }

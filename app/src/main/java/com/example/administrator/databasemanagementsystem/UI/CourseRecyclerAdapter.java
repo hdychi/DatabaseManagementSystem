@@ -19,7 +19,7 @@ import java.util.List;
  * Created by Administrator on 2017/3/19.
  */
 
-public class CourseRecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.IViewHolder> {
+public class CourseRecyclerAdapter extends RecyclerView.Adapter<StudentRecyclerAdapter.IViewHolder> {
     private List<RecyclerItem> mItems;
     private RecyclerItem nowItem;
     private Context mContext;
@@ -43,13 +43,13 @@ public class CourseRecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.
         mItems.add(item);
     }
     @Override
-    public RecyclerAdapter.IViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public StudentRecyclerAdapter.IViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         LinearLayout layout = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.course_list_item,parent,false);
-        RecyclerAdapter.IViewHolder holder = new RecyclerAdapter.IViewHolder(layout);
+        StudentRecyclerAdapter.IViewHolder holder = new StudentRecyclerAdapter.IViewHolder(layout);
         return holder;
     }
     @Override
-    public void onBindViewHolder(RecyclerAdapter.IViewHolder holder, int position){
+    public void onBindViewHolder(StudentRecyclerAdapter.IViewHolder holder, int position){
         View itemLayout = (View)holder.itemView;
         nowItem = mItems.get(position);
         final TextView stdId = (TextView)itemLayout.findViewById(R.id.courFragstdId);
@@ -67,7 +67,7 @@ public class CourseRecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.
             public void onClick(View v) {
                 Intent intent = new Intent();
 
-                intent.setClass(mContext,UpdateChooseActivity.class);
+                intent.setClass(mContext,UpdateChooseFromStudentActivity.class);
                 intent.putExtra("stdId",nowItem.getStudent().getStdId());
                 intent.putExtra("courId",nowItem.getCourse().getCourId());
                 mContext.startActivity(intent);

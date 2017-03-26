@@ -20,6 +20,7 @@ import com.example.administrator.databasemanagementsystem.DataBaseHelper;
 import com.example.administrator.databasemanagementsystem.Models.ChooseCourse;
 import com.example.administrator.databasemanagementsystem.Models.Course;
 import com.example.administrator.databasemanagementsystem.Models.DataBean;
+import com.example.administrator.databasemanagementsystem.Models.DataBean2;
 import com.example.administrator.databasemanagementsystem.Models.RecyclerItem;
 import com.example.administrator.databasemanagementsystem.Models.Student;
 import com.example.administrator.databasemanagementsystem.R;
@@ -33,6 +34,8 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+import static com.example.administrator.databasemanagementsystem.R.id.stdGPA;
+
 /**
  * Created by Administrator on 2017/3/19.
  */
@@ -41,7 +44,7 @@ public class CourseFragment extends Fragment {
     private Context mContext;
     private View layout;
     private RecyclerView mRecyclerView;
-    private RecyclerAdapter mAdapter;
+    private CourseRecyclerAdapter mAdapter;
     private Button updateButton;
     private Button confirmButton;
     private TextView courId;
@@ -63,31 +66,30 @@ public class CourseFragment extends Fragment {
 
         courId = (TextView)layout.findViewById(R.id.frag2courId);
         courName = (TextView)layout.findViewById(R.id.frag2courName);
-        stdGender = (TextView)layout.findViewById(R.id.stdIGender);
-        stdAge = (TextView)layout.findViewById(R.id.stdAge);
-        stdYear = (TextView)layout.findViewById(R.id.stdInYear);
-        stdClass = (TextView)layout.findViewById(R.id.stdClass);
-        stdGPA = (TextView)layout.findViewById(R.id.stdGPA);
-        classGPA = (TextView)layout.findViewById(R.id.stdClassGPA);
+        courTeacherName = (TextView)layout.findViewById(R.id.frag2TeacherName);
+        courCredit = (TextView)layout.findViewById(R.id.frag2Credit);
+        courMinGrade = (TextView)layout.findViewById(R.id.frag2MinGrade);
+        courCancelYear = (TextView)layout.findViewById(R.id.frag2CancelYear);
+
         confirmButton = (Button)layout.findViewById(R.id.confirmButton);
         updateButton = (Button)layout.findViewById(R.id.updateStudentButton);
         editText = (EditText)layout.findViewById(R.id.editText);
 
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mAdapter = new RecyclerAdapter(mContext);
+        mAdapter = new CourseRecyclerAdapter(mContext);
         mRecyclerView.setAdapter(mAdapter);
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(mContext,UpdateStudentActivity.class);
-                intent.putExtra("stdId",stdId.getText());
-                intent.putExtra("stdName",stdName.getText());
-                intent.putExtra("stdGender",stdGender.getText());
-                intent.putExtra("stdClass",stdClass.getText());
-                intent.putExtra("stdYear",stdYear.getText());
-                intent.putExtra("stdAge",stdAge.getText());
+                intent.setClass(mContext,UpdateCourseActivity.class);
+                intent.putExtra("courId",courId.getText());
+                intent.putExtra("courName",courName.getText());
+                intent.putExtra("courTeacherName",courTeacherName.getText());
+                intent.putExtra("courCredit",courCredit.getText());
+                intent.putExtra("courMinGrade",courMinGrade.getText());
+                intent.putExtra("courCancelYear",courCancelYear.getText());
                 startActivity(intent);
             }
         });
@@ -100,22 +102,20 @@ public class CourseFragment extends Fragment {
         getData();
     }
     public void getData(){
-        Observable<DataBean> observable = Observable.create(new Observable.OnSubscribe<DataBean>() {
+        Observable<DataBean2> observable = Observable.create(new Observable.OnSubscribe<DataBean2>() {
             @Override
-            public void call(Subscriber<? super DataBean> subscriber) {
-                Student student = getStudentInformation(editText.getText().toString());
-                List<RecyclerItem> items = getItems(student);
-                double stdGPA = new DataBaseHelper(db).getStudentGPA(stdId.getText().toString());
-                double classGPA = new DataBaseHelper(db).getClassGPA(stdClass.getText().toString());
-                DataBean bean = new DataBean();
-                bean.setStudent(student);
+            public void call(Subscriber<? super DataBean2> subscriber) {
+                Course course = getCourseInformation(editText.getText().toString());
+                List<RecyclerItem> items = getItems(course);
+
+                DataBean2 bean = new DataBean2();
+                bean.setCourse(course);
                 bean.setItems(items);
-                bean.setStdGPA(stdGPA);
-                bean.setStdClassGPA(classGPA);
+
                 subscriber.onNext(bean);
             }
         });
-        Subscriber<DataBean> subscriber = new Subscriber<DataBean>() {
+        Subscriber<DataBean2> subscriber = new Subscriber<DataBean2>() {
             @Override
             public void onCompleted() {
 
@@ -131,15 +131,14 @@ public class CourseFragment extends Fragment {
             }
 
             @Override
-            public void onNext(DataBean dataBean) {
-                stdId.setText(dataBean.getStudent().getStdId());
-                stdName.setText(dataBean.getStudent().getStdName());
-                stdAge.setText(dataBean.getStudent().getStdAge());
-                stdClass.setText(dataBean.getStudent().getStdClass());
-                stdGender.setText(dataBean.getStudent().getStdGender());
-                stdYear.setText(dataBean.getStudent().getStdYear());
-                stdGPA.setText(dataBean.getStdGPA()+"");
-                classGPA.setText(dataBean.getStdClassGPA()+"");
+            public void onNext(DataBean2 dataBean) {
+                courId.setText(dataBean.getCourse().getCourId()==null?"无":dataBean.getCourse().getCourId());
+                courName.setText(dataBean.getCourse().getCourName());
+                courTeacherName.setText(dataBean.getCourse().getCourTeacherName());
+                courCredit.setText(dataBean.getCourse().getCourCredit());
+                courMinGrade.setText(dataBean.getCourse().getCourMinGrade());
+                courCancelYear.setText(dataBean.getCourse().getCourCancelYear());
+                //TODO:更新其他view控件
                 mAdapter.addAll(dataBean.getItems());
             }
         };
@@ -147,21 +146,21 @@ public class CourseFragment extends Fragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
     }
-    public Student getStudentInformation(String idOrName){
+    public Course getCourseInformation(String idOrName){
         if(idOrName.charAt(0)<='9'&&idOrName.charAt(0)>='0'){
-            return new DataBaseHelper(db).getStudentWithId(idOrName);
+            return new DataBaseHelper(db).getCourseWithId(idOrName);
         }
         else{
-            return new DataBaseHelper(db).getStudentWithName(idOrName);
+            return new DataBaseHelper(db).getCourseWithName(idOrName);
         }
 
     }
-    public List<RecyclerItem> getItems(Student student){
+    public List<RecyclerItem> getItems(Course course){
         List<RecyclerItem> res = new ArrayList<>();
-        List<ChooseCourse> chooseCourses = new DataBaseHelper(db).getChooseCourseWithStudent(student.getStdId());
+        List<ChooseCourse> chooseCourses = new DataBaseHelper(db).getChooseCourseWithCourse(course.getCourId());
         for(ChooseCourse chooseCourse:chooseCourses){
-            Course temp = new DataBaseHelper(db).getCourseWithId(chooseCourse.getCourId());
-            RecyclerItem item = new RecyclerItem(student,temp,chooseCourse);
+            Student temp = new DataBaseHelper(db).getStudentWithId(chooseCourse.getCourId());
+            RecyclerItem item = new RecyclerItem(temp,course,chooseCourse);
             res.add(item);
         }
         return res;

@@ -72,12 +72,12 @@ public class UpdateCourseActivity extends Activity{
                 Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
                     @Override
                     public void call(Subscriber<? super String> subscriber) {
-                        updateId(courId.getText().toString());
-                        updateName(courName.getText().toString());
-                        updateCredit(Integer.valueOf(courCredit.getText().toString()));
-                        updateCancelYear(Integer.valueOf(courCancelYear.getText().toString()));
-                        updateMinGrade(Integer.valueOf(courMinGrade.getText().toString()));
-                        updateTeacher(courTeacherName.getText().toString());
+                        updateId(courId.getText().toString().trim());
+                        updateName(courName.getText().toString().trim());
+                        updateCredit(Integer.valueOf(courCredit.getText().toString().trim()));
+                        updateCancelYear(Integer.valueOf(courCancelYear.getText().toString().replace(" ","")));
+                        updateMinGrade(Integer.valueOf(courMinGrade.getText().toString().replace(" ","")));
+                        updateTeacher(courTeacherName.getText().toString().trim());
                         subscriber.onNext("更新数据");
                     }
                 });

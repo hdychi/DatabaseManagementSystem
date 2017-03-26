@@ -1,7 +1,6 @@
 package com.example.administrator.databasemanagementsystem.UI;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +20,11 @@ import java.util.List;
  * Created by Administrator on 2017/3/13.
  */
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.IViewHolder>{
+public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecyclerAdapter.IViewHolder>{
     private List<RecyclerItem> mItems;
     private RecyclerItem nowItem;
     private Context mContext;
-    public RecyclerAdapter(Context context){
+    public StudentRecyclerAdapter(Context context){
         mItems = new ArrayList<>();
         mContext = context;
     }
@@ -62,7 +61,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.IViewH
         final TextView cancelYear = (TextView)itemLayout.findViewById(R.id.courCancelYear);
         final TextView chooseYear = (TextView)itemLayout.findViewById(R.id.chooseYear);
         final TextView grade = (TextView)itemLayout.findViewById(R.id.grade);
-
+        final Button updateButton = (Button)itemLayout.findViewById(R.id.list_item_update_button);
+        final Button deleteButton = (Button)itemLayout.findViewById(R.id.list_item_delete_button);
         courId.setText(nowItem.getCourse().getCourId());
         courName.setText(nowItem.getCourse().getCourName());
         teacher.setText(nowItem.getCourse().getCourTeacherName());
@@ -71,17 +71,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.IViewH
         cancelYear.setText(nowItem.getCourse().getCourCancelYear());
         chooseYear.setText(nowItem.getChooseCourse().getChooseYear());
         grade.setText(nowItem.getChooseCourse().getGrade());
-        /*button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
 
-                intent.setClass(mContext,UpdateChooseActivity.class);
-                intent.putExtra("stdId",nowItem.getStudent().getStdId());
-                intent.putExtra("courId",nowItem.getCourse().getCourId());
-                mContext.startActivity(intent);
-            }
-        });*/
+        
     }
     @Override
     public int getItemCount() {

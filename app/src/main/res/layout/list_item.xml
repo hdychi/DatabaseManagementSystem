@@ -106,5 +106,22 @@
             android:layout_weight="1"
             android:id="@+id/grade"/>
     </LinearLayout>
-
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="right">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改"
+            android:id="@+id/list_item_update_button"
+            android:layout_gravity="right"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="删除"
+            android:id="@+id/list_item_delete_button"
+            android:layout_gravity="right"/>
+    </LinearLayout>
 </LinearLayout>

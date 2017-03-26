@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.administrator.databasemanagementsystem.DataBaseHelper;
 import com.example.administrator.databasemanagementsystem.R;
@@ -17,10 +19,10 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by Administrator on 2017/3/13.
+ * Created by Administrator on 2017/3/26.
  */
 
-public class UpdateChooseActivity extends Activity {
+public class InsertChooseAcrivity extends Activity {
     private EditText stdId;
     private EditText courId;
     private EditText chooseYear;
@@ -38,33 +40,29 @@ public class UpdateChooseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savadInstance){
         super.onCreate(savadInstance);
-        setContentView(R.layout.update_choose_layout);
+        setContentView(R.layout.update_choose_from_student_layout);
         stdId = (EditText)findViewById(R.id.updateChooseStdrId);
         courId = (EditText)findViewById(R.id.updateChooseCourId);
         chooseYear = (EditText)findViewById(R.id.updatesChooseYear);
         grade = (EditText)findViewById(R.id.updateChooseGrade);
         button = (Button)findViewById(R.id.updateChooseConfirmButton);
-        originStdId = (String)savadInstance.get("stdId");
-        originCourId = (String)savadInstance.get("courId");
-        originChooseYear = Integer.valueOf((String)savadInstance.get("chooseYear"));
-        originGrade = Integer.valueOf((String)savadInstance.get("grade"));
+
+
+
         databasePath = Environment.getExternalStorageDirectory()+"/databaseManagement/"+"data.db";
         db = SQLiteDatabase.openOrCreateDatabase(databasePath,null);
         helper = new DataBaseHelper(db);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+                Observable<Boolean> observable = Observable.create(new Observable.OnSubscribe<Boolean>() {
                     @Override
-                    public void call(Subscriber<? super String> subscriber) {
-                        updateStdId(stdId.getText().toString());
-                        updateCourId(courId.getText().toString());
-                        updateChooseYear(Integer.valueOf(chooseYear.getText().toString()));
-                        updateGrade(Integer.valueOf(grade.getText().toString()));
-                        subscriber.onNext("更新数据");
+                    public void call(Subscriber<? super Boolean> subscriber) {
+
+                        subscriber.onNext(insertData());
                     }
                 });
-                Subscriber<String> subscriber = new Subscriber<String>() {
+                Subscriber<Boolean> subscriber = new Subscriber<Boolean>() {
                     @Override
                     public void onCompleted() {
 
@@ -76,36 +74,34 @@ public class UpdateChooseActivity extends Activity {
                     }
 
                     @Override
-                    public void onNext(String s) {
-                        finish();
+                    public void onNext(Boolean s) {
+                        if(s) {
+                            finish();
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(),"数据不完整无法插入",Toast.LENGTH_SHORT).show();
+                        }
                     }
                 };
                 observable.subscribeOn(Schedulers.io())
-                           .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(subscriber);
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(subscriber);
             }
         });
 
 
     }
-    public void updateStdId(String id){
-        if(!id.equals(originStdId)){
-            helper.updateChoose("stdId",id,originStdId,originCourId);
+    public boolean insertData(){
+        if(TextUtils.isEmpty(stdId.getText())||TextUtils.isEmpty(courId.getText())||TextUtils.isEmpty(chooseYear.getText())||TextUtils.isEmpty(grade.getText())){
+            return false;
         }
-    }
-    public void updateCourId(String id){
-        if(!id.equals(originCourId)){
-            helper.updateChoose("courId",id,originStdId,originCourId);
+        if(courId.getText().toString().trim().length()==0
+                ||stdId.getText().toString().trim().length()==0
+                ||chooseYear.getText().toString().trim().length()==0
+                ||grade.getText().toString().trim().length()==0){
+            return false;
         }
-    }
-    public void updateChooseYear(int year){
-        if(year!=originChooseYear){
-            helper.updateChoose("chooseYear",year,originStdId,originCourId);
-        }
-    }
-    public void updateGrade(int grade){
-        if(grade!=originGrade){
-            helper.updateChoose("grade",grade,originStdId,originCourId);
-        }
+        helper.insertChoose(stdId.getText().toString().trim(),courId.getText().toString().trim(),Integer.valueOf(chooseYear.getText().toString().replace(" ","")),Integer.valueOf(grade.getText().toString().replace(" ","")));
+        return true;
     }
 }

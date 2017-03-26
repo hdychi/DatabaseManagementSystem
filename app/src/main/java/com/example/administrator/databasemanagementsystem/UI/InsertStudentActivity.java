@@ -4,33 +4,28 @@ import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.administrator.databasemanagementsystem.DataBaseHelper;
-import com.example.administrator.databasemanagementsystem.Models.ChooseCourse;
-import com.example.administrator.databasemanagementsystem.Models.DataBean;
-import com.example.administrator.databasemanagementsystem.Models.RecyclerItem;
-import com.example.administrator.databasemanagementsystem.Models.Student;
 import com.example.administrator.databasemanagementsystem.R;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.logging.StreamHandler;
 
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by Administrator on 2017/3/14.
+ * Created by Administrator on 2017/3/22.
  */
 
-public class UpdateStudentActivity extends Activity{
+public class InsertStudentActivity extends Activity {
     private Button comfirmButton;
     private EditText stdId;
     private EditText stdName;
@@ -81,19 +76,14 @@ public class UpdateStudentActivity extends Activity{
         comfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
-                   @Override
-                   public void call(Subscriber<? super String> subscriber) {
-                       updateID(stdId.getText().toString().trim());
-                       updateName(stdName.getText().toString().trim());
-                       updateGender(stdGender.getText().toString().trim());
-                       updateAge(Integer.valueOf(stdAge.getText().toString().replace(" ","")));
-                       updateYear(Integer.valueOf(stdYear.getText().toString().replace(" ","")));
-                       updateClass(stdClass.getText().toString());
-                       subscriber.onNext("数据更新");
-                   }
-               });
-                Subscriber<String> subscriber = new Subscriber<String>() {
+                Observable<Boolean> observable = Observable.create(new Observable.OnSubscribe<Boolean>() {
+                    @Override
+                    public void call(Subscriber<? super Boolean> subscriber) {
+
+                        subscriber.onNext(insertData());
+                    }
+                });
+                Subscriber<Boolean> subscriber = new Subscriber<Boolean>() {
                     @Override
                     public void onCompleted() {
 
@@ -109,8 +99,13 @@ public class UpdateStudentActivity extends Activity{
                     }
 
                     @Override
-                    public void onNext(String s) {
-                       finish();
+                    public void onNext(Boolean s) {
+                        if(s) {
+                            finish();
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(),"数据不完整无法加入",Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } ;
                 observable.subscribeOn(Schedulers.io())
@@ -122,38 +117,34 @@ public class UpdateStudentActivity extends Activity{
             }
         });
     }
-    public void updateID(String value){
-        if(!value.equals(originID)){
-            List<ChooseCourse> chooseCourses =  helper.getChooseCourseWithStudent(originID);
-           for(ChooseCourse chooseCourse:chooseCourses){
-               helper.deleteChoose(chooseCourse.getStdId(),chooseCourse.getCourId());
-           }
-            helper.updateStudent("stdId",value,originID);
+
+    public boolean insertData(){
+        if(TextUtils.isEmpty(stdId.getText())
+                ||TextUtils.isEmpty(stdName.getText())
+                ||TextUtils.isEmpty(stdAge.getText())
+                ||TextUtils.isEmpty(stdClass.getText())
+                ||TextUtils.isEmpty(stdYear.getText())
+                ||TextUtils.isEmpty(stdGender.getText())){
+
+            return false;
         }
-    }
-    public void updateName(String name){
-        if(!name.equals(originName)){
-            helper.updateStudent("stdName",name,originID);
+        if(stdId.getText().toString().trim().length()!=0
+                &&stdName.getText().toString().trim().length()!=0
+                &&stdAge.getText().toString().trim().length()!=0
+                &&stdClass.getText().toString().trim().length()!=0
+                &&stdGender.getText().toString().trim().length()!=0
+                &&stdYear.getText().toString().trim().length()!=0){
+
+               helper.insertStudent(stdId.getText().toString(),stdName.getText().toString(),stdGender.getText().toString(),
+                       Integer.valueOf(stdAge.getText().toString().replace(" ","")),
+                       Integer.valueOf(stdYear.getText().toString().replace(" ","")),stdClass.getText().toString());
+
+
+           return true;
         }
-    }
-    public void updateGender(String gender){
-        if(!gender.equals(originGender)){
-            helper.updateStudent("stdGender",gender,originID);
-        }
-    }
-    public void updateAge(int age){
-        if(age!=originAge){
-            helper.updateStudent("stdAge",age,originID);
-        }
-    }
-    public void updateYear(int year){
-        if(year!=originYear){
-            helper.updateStudent("stdInYear",year,originID);
-        }
-    }
-    public void updateClass(String inClass){
-        if(inClass!=originClass){
-            helper.updateStudent("stdClass",inClass,originID);
+        else{
+
+            return  false;
         }
     }
 }
