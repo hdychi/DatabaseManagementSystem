@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -25,7 +28,7 @@ import rx.schedulers.Schedulers;
  * Created by Administrator on 2017/3/22.
  */
 
-public class InsertStudentActivity extends Activity {
+public class InsertStudentActivity extends AppCompatActivity {
     private Button comfirmButton;
     private EditText stdId;
     private EditText stdName;
@@ -33,6 +36,7 @@ public class InsertStudentActivity extends Activity {
     private EditText stdAge;
     private EditText stdYear;
     private EditText stdClass;
+    private Toolbar mToolbar;
 
     private String originID;
     private String originName;
@@ -47,6 +51,8 @@ public class InsertStudentActivity extends Activity {
     @Override
     protected void onCreate(Bundle savadInstance){
         super.onCreate(savadInstance);
+        Window window = getWindow();
+        window.setStatusBarColor(getResources().getColor(R.color.lightBlue));
         setContentView(R.layout.update_student_layout);
 
         stdId = (EditText)findViewById(R.id.updateStdId);
@@ -56,6 +62,16 @@ public class InsertStudentActivity extends Activity {
         stdYear = (EditText)findViewById(R.id.updateStdInYear);
         stdClass = (EditText)findViewById(R.id.updateStdClass);
         comfirmButton = (Button)findViewById(R.id.updateStdConfirmButton);
+        mToolbar =(Toolbar)findViewById(R.id.update_std_toolbar);
+        mToolbar.setTitle("添加学生信息");
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 
 

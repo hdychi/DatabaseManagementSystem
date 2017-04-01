@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -32,7 +35,7 @@ import rx.schedulers.Schedulers;
  * Created by Administrator on 2017/3/14.
  */
 
-public class UpdateStudentActivity extends Activity{
+public class UpdateStudentActivity extends AppCompatActivity {
     private Button comfirmButton;
     private EditText stdId;
     private EditText stdName;
@@ -40,7 +43,7 @@ public class UpdateStudentActivity extends Activity{
     private EditText stdAge;
     private EditText stdYear;
     private EditText stdClass;
-
+    private Toolbar mToolbar;
     private String originID;
     private String originName;
     private  String originGender;
@@ -54,6 +57,8 @@ public class UpdateStudentActivity extends Activity{
     @Override
     protected void onCreate(final Bundle savadInstance){
         super.onCreate(savadInstance);
+        Window window = getWindow();
+        window.setStatusBarColor(getResources().getColor(R.color.lightBlue));
         setContentView(R.layout.update_student_layout);
 
         stdId = (EditText)findViewById(R.id.updateStdId);
@@ -63,7 +68,17 @@ public class UpdateStudentActivity extends Activity{
         stdYear = (EditText)findViewById(R.id.updateStdInYear);
         stdClass = (EditText)findViewById(R.id.updateStdClass);
         comfirmButton = (Button)findViewById(R.id.updateStdConfirmButton);
-
+        mToolbar =(Toolbar)findViewById(R.id.update_std_toolbar);
+        mToolbar.setTitle("更新学生信息");
+        setSupportActionBar(mToolbar);
+        //mToolbar.setNavigationIcon(R.mipmap.icon_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         Bundle bundle = this.getIntent().getExtras();
         originID = (String)bundle.get("stdId");
         originName = (String)bundle.get("stdName");
@@ -77,6 +92,9 @@ public class UpdateStudentActivity extends Activity{
         stdAge.setText(originAge+"");
         stdYear.setText(originYear+"");
         stdClass.setText(originClass);
+
+
+
         databasePath = Environment.getExternalStorageDirectory()+"/databaseManagement/"+"data.db";
         db = SQLiteDatabase.openOrCreateDatabase(databasePath,null);
         helper = new DataBaseHelper(db);

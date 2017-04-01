@@ -5,8 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -30,11 +33,12 @@ import rx.schedulers.Schedulers;
  * Created by Administrator on 2017/3/26.
  */
 
-public class UpdateChooseFromCourseActivity extends Activity {
+public class UpdateChooseFromCourseActivity extends AppCompatActivity {
     private EditText stdId;
     private TextView courId;
     private EditText chooseYear;
     private EditText grade;
+    private Toolbar mToolbar;
 
     private Button button;
     private String originStdId;
@@ -48,12 +52,24 @@ public class UpdateChooseFromCourseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savadInstance){
         super.onCreate(savadInstance);
+        Window window = getWindow();
+        window.setStatusBarColor(getResources().getColor(R.color.lightBlue));
         setContentView(R.layout.update_choose_from_course_layout);
         stdId = (EditText) findViewById(R.id.updateChooseStdrId);
         courId = (TextView) findViewById(R.id.updateChooseCourId);
         chooseYear = (EditText)findViewById(R.id.updatesChooseYear);
         grade = (EditText)findViewById(R.id.updateChooseGrade);
         button = (Button)findViewById(R.id.updateChooseConfirmButton);
+        mToolbar = (Toolbar)findViewById(R.id.update_choose_toolbar) ;
+        mToolbar.setTitle("更新选课信息");
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         Bundle bundle = this.getIntent().getExtras();
 

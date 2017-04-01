@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,7 +26,7 @@ import rx.schedulers.Schedulers;
  * Created by Administrator on 2017/3/17.
  */
 
-public class UpdateCourseActivity extends Activity{
+public class UpdateCourseActivity extends AppCompatActivity{
     private Button comfirmButton;
     private EditText courId;
     private EditText courName;
@@ -31,6 +34,7 @@ public class UpdateCourseActivity extends Activity{
     private EditText courCredit;
     private EditText courMinGrade;
     private EditText courCancelYear;
+    private Toolbar mToolbar;
     private  String originCourId;
     private String originCourName;
     private String originCourTeacherName;
@@ -43,6 +47,8 @@ public class UpdateCourseActivity extends Activity{
     private DataBaseHelper helper;
     protected void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
+        Window window = getWindow();
+        window.setStatusBarColor(getResources().getColor(R.color.lightBlue));
         setContentView(R.layout.update_course_layout);
 
         courId = (EditText)findViewById(R.id.updateCourId);
@@ -52,7 +58,16 @@ public class UpdateCourseActivity extends Activity{
         courMinGrade = (EditText)findViewById(R.id.updateCourGrade);
         courCancelYear = (EditText)findViewById(R.id.updateCourYear);
         comfirmButton = (Button)findViewById(R.id.updateCourConfirmButton);
-
+        mToolbar = (Toolbar)findViewById(R.id.update_cour_toolbar);
+        mToolbar.setTitle("更新课程信息");
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         Bundle bundle  = this.getIntent().getExtras();
         originCourId = (String)bundle.get("courId");
         originCourName = (String)bundle.get("courName");
