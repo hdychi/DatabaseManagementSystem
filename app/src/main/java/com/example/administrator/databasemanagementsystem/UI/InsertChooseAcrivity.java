@@ -2,6 +2,8 @@ package com.example.administrator.databasemanagementsystem.UI;
 
 import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
+
+
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
@@ -11,7 +13,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.administrator.databasemanagementsystem.DataBaseHelper;
+import com.example.administrator.databasemanagementsystem.Models.Course;
+import com.example.administrator.databasemanagementsystem.Models.Student;
 import com.example.administrator.databasemanagementsystem.R;
+
+
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -40,7 +48,7 @@ public class InsertChooseAcrivity extends Activity {
     @Override
     protected void onCreate(Bundle savadInstance){
         super.onCreate(savadInstance);
-        setContentView(R.layout.update_choose_from_student_layout);
+        setContentView(R.layout.insert_choose_layout);
         stdId = (EditText)findViewById(R.id.updateChooseStdrId);
         courId = (EditText)findViewById(R.id.updateChooseCourId);
         chooseYear = (EditText)findViewById(R.id.updatesChooseYear);
@@ -70,7 +78,8 @@ public class InsertChooseAcrivity extends Activity {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Toast.makeText(getApplicationContext(),"数据非法无法插入",Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
                     }
 
                     @Override
@@ -79,7 +88,7 @@ public class InsertChooseAcrivity extends Activity {
                             finish();
                         }
                         else{
-                            Toast.makeText(getApplicationContext(),"数据不完整无法插入",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"数据不合法无法插入",Toast.LENGTH_SHORT).show();
                         }
                     }
                 };
@@ -98,7 +107,18 @@ public class InsertChooseAcrivity extends Activity {
         if(courId.getText().toString().trim().length()==0
                 ||stdId.getText().toString().trim().length()==0
                 ||chooseYear.getText().toString().trim().length()==0
-                ||grade.getText().toString().trim().length()==0){
+                ||grade.getText().toString().trim().length()==0) {
+            return false;
+        }
+        Student student =helper.getStudentWithId(stdId.getText().toString());
+        Course course   = helper.getCourseWithId(courId.getText().toString()) ;
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        if((Integer.valueOf(chooseYear.getText().toString().replace(" ",""))>course.getCourCancelYear()&&course.getCourCancelYear()>0)||calendar.get(Calendar.YEAR)-student.getStdYear()+(calendar.get(java.util.Calendar.MONTH)>9?1:0)<course.getCourMinGrade()){
+
+
+            System.out.println("选课年份:"+Integer.valueOf(chooseYear.getText().toString().replace(" ",""))+"取消年份"+course.getCourCancelYear()+"年级"+(calendar.get(Calendar.YEAR)-student.getStdYear()+(calendar.get(java.util.Calendar.MONTH)>9?1:0))+"适合年级"+course.getCourMinGrade());
             return false;
         }
         helper.insertChoose(stdId.getText().toString().trim(),courId.getText().toString().trim(),Integer.valueOf(chooseYear.getText().toString().replace(" ","")),Integer.valueOf(grade.getText().toString().replace(" ","")));

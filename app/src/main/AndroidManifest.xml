@@ -16,6 +16,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".UI.InsertChooseAcrivity"></activity>
+        <activity android:name=".UI.InsertCourseActivity"></activity>
+        <activity android:name=".UI.InsertStudentActivity"></activity>
+        <activity android:name=".UI.UpdateStudentActivity"></activity>
+        <activity android:name=".UI.UpdateCourseActivity"></activity>
+        <activity android:name=".UI.UpdateChooseFromStudentActivity"></activity>
+        <activity android:name=".UI.UpdateChooseFromCourseActivity"></activity>
     </application>
 
 </manifest>

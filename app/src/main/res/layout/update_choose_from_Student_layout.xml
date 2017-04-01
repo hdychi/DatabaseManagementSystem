@@ -7,31 +7,33 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:text="选课信息:"
-        android:paddingLeft="10dp"/>
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        >
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:text="学生学号："/>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="105dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:id="@+id/updateChooseStdrId"/>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:text="课程编号："/>
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:id="@+id/updateChooseCourId"/>
     </LinearLayout>
     <LinearLayout
@@ -40,24 +42,24 @@
         android:paddingLeft="10dp"
         android:paddingTop="10dp">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:text="选课年份："/>
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="105dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:id="@+id/updatesChooseYear"/>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:text="课程成绩："/>
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="105dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:id="@+id/updateChooseGrade"/>
     </LinearLayout>
 

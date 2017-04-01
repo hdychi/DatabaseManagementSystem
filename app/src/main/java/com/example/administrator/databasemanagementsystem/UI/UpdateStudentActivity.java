@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.administrator.databasemanagementsystem.DataBaseHelper;
 import com.example.administrator.databasemanagementsystem.Models.ChooseCourse;
@@ -50,7 +52,7 @@ public class UpdateStudentActivity extends Activity{
     private SQLiteDatabase db;
     private DataBaseHelper helper;
     @Override
-    protected void onCreate(Bundle savadInstance){
+    protected void onCreate(final Bundle savadInstance){
         super.onCreate(savadInstance);
         setContentView(R.layout.update_student_layout);
 
@@ -62,18 +64,18 @@ public class UpdateStudentActivity extends Activity{
         stdClass = (EditText)findViewById(R.id.updateStdClass);
         comfirmButton = (Button)findViewById(R.id.updateStdConfirmButton);
 
-
-        originID = (String)savadInstance.get("stdId");
-        originName = (String)savadInstance.get("stdName");
-        originGender = (String)savadInstance.get("stdGender");
-        originAge = Integer.valueOf((String)savadInstance.get("stdAge"));
-        originYear = Integer.valueOf((String)savadInstance.get("stdYear"));
-        originClass = (String)savadInstance.get("stdClass");
+        Bundle bundle = this.getIntent().getExtras();
+        originID = (String)bundle.get("stdId");
+        originName = (String)bundle.get("stdName");
+        originGender = (String)bundle.get("stdGender");
+        originAge = Integer.valueOf((String)bundle.get("stdAge"));
+        originYear = Integer.valueOf((String)bundle.get("stdYear"));
+        originClass = (String)bundle.get("stdClass");
         stdId.setText(originID);
         stdName.setText(originName);
         stdGender.setText(originGender);
-        stdAge.setText(originAge);
-        stdYear.setText(originYear);
+        stdAge.setText(originAge+"");
+        stdYear.setText(originYear+"");
         stdClass.setText(originClass);
         databasePath = Environment.getExternalStorageDirectory()+"/databaseManagement/"+"data.db";
         db = SQLiteDatabase.openOrCreateDatabase(databasePath,null);
@@ -81,19 +83,23 @@ public class UpdateStudentActivity extends Activity{
         comfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+               Observable<Boolean> observable = Observable.create(new Observable.OnSubscribe<Boolean>() {
                    @Override
-                   public void call(Subscriber<? super String> subscriber) {
+                   public void call(Subscriber<? super Boolean> subscriber) {
+                       if(!checkLegal()){
+                           subscriber.onNext(false);
+                           return;
+                       }
                        updateID(stdId.getText().toString().trim());
                        updateName(stdName.getText().toString().trim());
                        updateGender(stdGender.getText().toString().trim());
                        updateAge(Integer.valueOf(stdAge.getText().toString().replace(" ","")));
                        updateYear(Integer.valueOf(stdYear.getText().toString().replace(" ","")));
                        updateClass(stdClass.getText().toString());
-                       subscriber.onNext("数据更新");
+                       subscriber.onNext(true);
                    }
                });
-                Subscriber<String> subscriber = new Subscriber<String>() {
+                Subscriber<Boolean> subscriber = new Subscriber<Boolean>() {
                     @Override
                     public void onCompleted() {
 
@@ -105,12 +111,18 @@ public class UpdateStudentActivity extends Activity{
                             Log.i("IOE","EXception");
 
                         }
+                        Log.i("更新","错误");
+                        Toast.makeText(getApplicationContext(),"数据不合法无法更新" ,Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
 
                     @Override
-                    public void onNext(String s) {
-                       finish();
+                    public void onNext(Boolean s) {
+                        if(!s){
+                            Toast.makeText(getApplicationContext(),"数据不合法无法更新" ,Toast.LENGTH_SHORT).show();
+                        }else {
+                            finish();
+                        }
                     }
                 } ;
                 observable.subscribeOn(Schedulers.io())
@@ -123,7 +135,7 @@ public class UpdateStudentActivity extends Activity{
         });
     }
     public void updateID(String value){
-        if(!value.equals(originID)){
+        if(!value.equals(originID)&&value.length()==10){
             List<ChooseCourse> chooseCourses =  helper.getChooseCourseWithStudent(originID);
            for(ChooseCourse chooseCourse:chooseCourses){
                helper.deleteChoose(chooseCourse.getStdId(),chooseCourse.getCourId());
@@ -154,6 +166,33 @@ public class UpdateStudentActivity extends Activity{
     public void updateClass(String inClass){
         if(inClass!=originClass){
             helper.updateStudent("stdClass",inClass,originID);
+        }
+    }
+    public boolean checkLegal(){
+        if(TextUtils.isEmpty(stdId.getText())
+                ||TextUtils.isEmpty(stdName.getText())
+                ||TextUtils.isEmpty(stdAge.getText())
+                ||TextUtils.isEmpty(stdClass.getText())
+                ||TextUtils.isEmpty(stdYear.getText())
+                ||TextUtils.isEmpty(stdGender.getText())){
+
+            return false;
+        }
+        if(stdId.getText().toString().trim().length()==10
+                &&stdName.getText().toString().trim().length()!=0
+                &&stdAge.getText().toString().trim().length()!=0
+                &&stdClass.getText().toString().trim().length()!=0
+                &&stdGender.getText().toString().trim().length()!=0
+                &&stdYear.getText().toString().trim().length()!=0){
+
+
+
+
+            return true;
+        }
+        else{
+
+            return  false;
         }
     }
 }

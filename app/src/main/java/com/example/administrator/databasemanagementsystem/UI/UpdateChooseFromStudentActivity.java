@@ -2,8 +2,10 @@ package com.example.administrator.databasemanagementsystem.UI;
 
 import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
+
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,9 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.databasemanagementsystem.DataBaseHelper;
+import com.example.administrator.databasemanagementsystem.Models.Course;
+import com.example.administrator.databasemanagementsystem.Models.Student;
 import com.example.administrator.databasemanagementsystem.R;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -49,15 +55,17 @@ public class UpdateChooseFromStudentActivity extends Activity {
         grade = (EditText)findViewById(R.id.updateChooseGrade);
         button = (Button)findViewById(R.id.updateChooseConfirmButton);
 
-        originStdId = (String)savadInstance.get("stdId");
-        originCourId = (String)savadInstance.get("courId");
-        originChooseYear = Integer.valueOf((String)savadInstance.get("chooseYear"));
-        originGrade = Integer.valueOf((String)savadInstance.get("grade"));
+        Bundle bundle = this.getIntent().getExtras();
+
+        originStdId = (String)bundle.get("stdId");
+        originCourId = (String)bundle.get("courId");
+        originChooseYear = (Integer) bundle.get("chooseYear");
+        originGrade = (Integer)bundle.get("grade");
 
         stdId.setText(originStdId);
         courId.setText(originCourId);
-        chooseYear.setText(originChooseYear);
-        grade.setText(originGrade);
+        chooseYear.setText(originChooseYear+"");
+        grade.setText(originGrade+"");
 
         databasePath = Environment.getExternalStorageDirectory()+"/databaseManagement/"+"data.db";
         db = SQLiteDatabase.openOrCreateDatabase(databasePath,null);
@@ -65,17 +73,21 @@ public class UpdateChooseFromStudentActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+                Observable<Boolean> observable = Observable.create(new Observable.OnSubscribe<Boolean>() {
                     @Override
-                    public void call(Subscriber<? super String> subscriber) {
+                    public void call(Subscriber<? super Boolean> subscriber) {
+                        if(!checkLegal()){
+                            subscriber.onNext(false);
+                            return;
+                        }
                         updateStdId(stdId.getText().toString().trim());
                         updateCourId(courId.getText().toString().trim());
                         updateChooseYear(Integer.valueOf(chooseYear.getText().toString().replace(" ","")));
                         updateGrade(Integer.valueOf(grade.getText().toString().replace(" ","")));
-                        subscriber.onNext("更新数据");
+                        subscriber.onNext(true);
                     }
                 });
-                Subscriber<String> subscriber = new Subscriber<String>() {
+                Subscriber<Boolean> subscriber = new Subscriber<Boolean>() {
                     @Override
                     public void onCompleted() {
 
@@ -84,14 +96,19 @@ public class UpdateChooseFromStudentActivity extends Activity {
                     @Override
                     public void onError(Throwable e) {
                         if(e instanceof IOException){
-                            Toast.makeText(getApplicationContext(),"更新异常",Toast.LENGTH_SHORT).show();
+
                         }
+                        Toast.makeText(getApplicationContext(),"数据不合法无法更新" ,Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
 
                     @Override
-                    public void onNext(String s) {
-                        finish();
+                    public void onNext(Boolean s) {
+                        if(!s){
+                            Toast.makeText(getApplicationContext(),"数据不合法无法更新" ,Toast.LENGTH_SHORT).show();
+                        }else {
+                            finish();
+                        }
                     }
                 };
                 observable.subscribeOn(Schedulers.io())
@@ -121,5 +138,28 @@ public class UpdateChooseFromStudentActivity extends Activity {
         if(grade!=originGrade){
             helper.updateChoose("grade",grade,originStdId,originCourId);
         }
+    }
+    public boolean checkLegal(){
+        if(TextUtils.isEmpty(stdId.getText())||TextUtils.isEmpty(courId.getText())||TextUtils.isEmpty(chooseYear.getText())||TextUtils.isEmpty(grade.getText())){
+            return false;
+        }
+        if(courId.getText().toString().trim().length()!=7
+                ||stdId.getText().toString().trim().length()!=10
+                ||chooseYear.getText().toString().trim().length()==0
+                ||grade.getText().toString().trim().length()==0) {
+            return false;
+        }
+        Student student =helper.getStudentWithId(stdId.getText().toString());
+        Course course   = helper.getCourseWithId(courId.getText().toString()) ;
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        if((Integer.valueOf(chooseYear.getText().toString().replace(" ",""))>course.getCourCancelYear()&&course.getCourCancelYear()>0)||calendar.get(Calendar.YEAR)-student.getStdYear()+(calendar.get(java.util.Calendar.MONTH)>9?1:0)<course.getCourMinGrade()){
+
+
+            System.out.println("选课年份:"+Integer.valueOf(chooseYear.getText().toString().replace(" ",""))+"取消年份"+course.getCourCancelYear()+"年级"+(calendar.get(Calendar.YEAR)-student.getStdYear()+(calendar.get(java.util.Calendar.MONTH)>9?1:0))+"适合年级"+course.getCourMinGrade());
+            return false;
+        }
+        return true;
     }
 }

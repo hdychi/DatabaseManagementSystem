@@ -4,15 +4,20 @@ import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.administrator.databasemanagementsystem.DataBaseHelper;
 import com.example.administrator.databasemanagementsystem.R;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Administrator on 2017/3/17.
@@ -48,19 +53,24 @@ public class UpdateCourseActivity extends Activity{
         courCancelYear = (EditText)findViewById(R.id.updateCourYear);
         comfirmButton = (Button)findViewById(R.id.updateCourConfirmButton);
 
-        originCourId = (String)savedInstance.get("courId");
-        originCourName = (String)savedInstance.get("courName");
-        originCourTeacherName = (String)savedInstance.get("courTeacherName");
-        originCourCredit = Integer.valueOf((String)savedInstance.get("courCredit"));
-        originCourMinGrade =  Integer.valueOf((String)savedInstance.get("courMinGrade"));
-        originCourCancelYear = Integer.valueOf((String)savedInstance.get("courCancelYear"));
-
+        Bundle bundle  = this.getIntent().getExtras();
+        originCourId = (String)bundle.get("courId");
+        originCourName = (String)bundle.get("courName");
+        originCourTeacherName = (String)bundle.get("courTeacherName");
+        originCourCredit = Integer.valueOf((String)bundle.get("courCredit"));
+        originCourMinGrade =  Integer.valueOf((String)bundle.get("courMinGrade"));
+        if(((String)bundle.get("courCancelYear")).length()>0) {
+            originCourCancelYear = Integer.valueOf((String) bundle.get("courCancelYear"));
+        }
+        else{
+            originCourCancelYear = -1;
+        }
         courId.setText(originCourId);
         courName.setText(originCourName);
         courTeacherName.setText(originCourTeacherName);
-        courCredit.setText(originCourCredit);
-        courMinGrade.setText(originCourMinGrade);
-        courCancelYear.setText(originCourCancelYear);
+        courCredit.setText(originCourCredit+"");
+        courMinGrade.setText(originCourMinGrade+"");
+        courCancelYear.setText(originCourCancelYear>0?courCancelYear+"":"");
 
         databasePath = Environment.getExternalStorageDirectory()+"/databaseManagement/"+"data.db";
         db = SQLiteDatabase.openOrCreateDatabase(databasePath,null);
@@ -69,19 +79,30 @@ public class UpdateCourseActivity extends Activity{
         comfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+                Observable<Boolean> observable = Observable.create(new Observable.OnSubscribe<Boolean>() {
                     @Override
-                    public void call(Subscriber<? super String> subscriber) {
+                    public void call(Subscriber<? super Boolean> subscriber) {
+                        if(!checkLegal()){
+                            subscriber.onNext(false);
+                            Log.i("更新课程","判断数据不合法");
+                            return;
+                        }
                         updateId(courId.getText().toString().trim());
                         updateName(courName.getText().toString().trim());
                         updateCredit(Integer.valueOf(courCredit.getText().toString().trim()));
-                        updateCancelYear(Integer.valueOf(courCancelYear.getText().toString().replace(" ","")));
+
                         updateMinGrade(Integer.valueOf(courMinGrade.getText().toString().replace(" ","")));
                         updateTeacher(courTeacherName.getText().toString().trim());
-                        subscriber.onNext("更新数据");
+                        if(courCancelYear.getText().toString().replace(" ","").length()>0) {
+                            updateCancelYear(Integer.valueOf(courCancelYear.getText().toString().replace(" ", "")));
+                        }
+                        else{
+                            updateCancelYear(-1);
+                        }
+                        subscriber.onNext(true);
                     }
                 });
-                Subscriber<String> subscriber = new Subscriber<String>() {
+                Subscriber<Boolean> subscriber = new Subscriber<Boolean>() {
                     @Override
                     public void onCompleted() {
 
@@ -89,19 +110,25 @@ public class UpdateCourseActivity extends Activity{
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Toast.makeText(getApplicationContext(),"数据不合法无法更新" ,Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
                     }
 
                     @Override
-                    public void onNext(String s) {
-                       finish();
+                    public void onNext(Boolean s) {
+                        if(!s){
+                            Toast.makeText(getApplicationContext(),"数据不合法无法更新" ,Toast.LENGTH_SHORT).show();
+                        }else {
+                            finish();
+                        }
                     }
                 };
+                observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
             }
         });
     }
     public void updateId(String id){
-        if(!id.equals(originCourId)){
+        if(!id.equals(originCourId)&&id.length()==7){
             helper.updateCourse("courId",id,originCourId);
         }
     }
@@ -130,4 +157,24 @@ public class UpdateCourseActivity extends Activity{
             helper.updateCourse("courCancelYear",cancelYear,originCourId);
         }
     }
+    public boolean checkLegal(){
+        if(TextUtils.isEmpty(courId.getText())
+                ||TextUtils.isEmpty(courName.getText())
+                ||TextUtils.isEmpty(courTeacherName.getText())
+                ||TextUtils.isEmpty(courCredit.getText())
+                ||TextUtils.isEmpty(courMinGrade.getText())){
+            return false;
+        }
+        if(courId.getText().toString().trim().length()==7
+                &&courName.getText().toString().trim().length()!=0
+                &&courTeacherName.getText().toString().trim().length()!=0
+                &&courCredit.getText().toString().trim().length()!=0
+                &&courMinGrade.getText().toString().trim().length()!=0){
+
+
+            return true;
+        }
+        return false;
+    }
+
 }

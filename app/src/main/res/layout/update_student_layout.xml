@@ -7,31 +7,33 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:text="学生信息:"
-        android:paddingLeft="10dp"/>
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        >
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:text="学生学号："/>
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="105dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:id="@+id/updateStdId"/>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:text="学生姓名："/>
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:id="@+id/updateStdName"/>
     </LinearLayout>
     <LinearLayout
@@ -40,24 +42,24 @@
         android:paddingLeft="10dp"
         android:paddingTop="10dp">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:text="性别："/>
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="105dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:id="@+id/updatesStdIGender"/>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:text="班级："/>
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="105dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:id="@+id/updateStdClass"/>
     </LinearLayout>
     <LinearLayout
@@ -66,24 +68,24 @@
         android:paddingLeft="10dp"
         android:paddingTop="10dp">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:text="入学年龄："/>
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="105dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:id="@+id/updateStdAge"/>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:text="入学年份："/>
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="105dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:id="@+id/updateStdInYear"/>
     </LinearLayout>
     <Button

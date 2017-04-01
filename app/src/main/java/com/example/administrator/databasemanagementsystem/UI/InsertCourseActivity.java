@@ -18,6 +18,8 @@ import java.io.IOException;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Administrator on 2017/3/26.
@@ -81,6 +83,8 @@ public class InsertCourseActivity extends Activity{
                             Log.i("IOE","EXception");
 
                         }
+                        Log.i("插入课程","异常");
+                        Toast.makeText(getApplicationContext(),"数据非法无法插入",Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
 
@@ -90,10 +94,11 @@ public class InsertCourseActivity extends Activity{
                             finish();
                         }
                         else{
-                            Toast.makeText(getApplicationContext(),"数据不完整无法插入",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"数据非法无法插入",Toast.LENGTH_SHORT).show();
                         }
                     }
                 };
+                observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
             }
         });
     }
@@ -105,15 +110,23 @@ public class InsertCourseActivity extends Activity{
                 ||TextUtils.isEmpty(courMinGrade.getText())){
             return false;
         }
-        if(courId.getText().toString().trim().length()!=0
+        if(courId.getText().toString().trim().length()==7
                 &&courName.getText().toString().trim().length()!=0
                 &&courTeacherName.getText().toString().trim().length()!=0
                 &&courCredit.getText().toString().trim().length()!=0
                 &&courMinGrade.getText().toString().trim().length()!=0){
-            helper.insertCourse(courId.getText().toString().trim(),courName.getText().toString().trim(),
-                    courTeacherName.getText().toString().trim(),Integer.valueOf(courCredit.getText().toString().replace(" ","")),
-                    Integer.valueOf(courMinGrade.getText().toString().replace(" ","")),
-                    Integer.valueOf(courCancelYear.getText().toString().replace(" ","")));
+            if(courCancelYear.getText().toString().replace(" ","").length()>0) {
+                helper.insertCourse(courId.getText().toString().trim(), courName.getText().toString().trim(),
+                        courTeacherName.getText().toString().trim(), Integer.valueOf(courCredit.getText().toString().replace(" ", "")),
+                        Integer.valueOf(courMinGrade.getText().toString().replace(" ", "")),
+                        Integer.valueOf(courCancelYear.getText().toString().replace(" ", "")));
+            }
+            else{
+                helper.insertCourse(courId.getText().toString().trim(), courName.getText().toString().trim(),
+                        courTeacherName.getText().toString().trim(), Integer.valueOf(courCredit.getText().toString().replace(" ", "")),
+                        Integer.valueOf(courMinGrade.getText().toString().replace(" ", "")),
+                        -1);
+            }
           return true;
         }
         return false;

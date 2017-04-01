@@ -58,18 +58,13 @@ public class InsertStudentActivity extends Activity {
         comfirmButton = (Button)findViewById(R.id.updateStdConfirmButton);
 
 
-        originID = (String)savadInstance.get("stdId");
-        originName = (String)savadInstance.get("stdName");
-        originGender = (String)savadInstance.get("stdGender");
-        originAge = Integer.valueOf((String)savadInstance.get("stdAge"));
-        originYear = Integer.valueOf((String)savadInstance.get("stdYear"));
-        originClass = (String)savadInstance.get("stdClass");
-        stdId.setText(originID);
-        stdName.setText(originName);
-        stdGender.setText(originGender);
-        stdAge.setText(originAge);
-        stdYear.setText(originYear);
-        stdClass.setText(originClass);
+
+        stdId.setText("");
+        stdName.setText("");
+        stdGender.setText("");
+        stdAge.setText("");
+        stdYear.setText("");
+        stdClass.setText("");
         databasePath = Environment.getExternalStorageDirectory()+"/databaseManagement/"+"data.db";
         db = SQLiteDatabase.openOrCreateDatabase(databasePath,null);
         helper = new DataBaseHelper(db);
@@ -95,6 +90,7 @@ public class InsertStudentActivity extends Activity {
                             Log.i("IOE","EXception");
 
                         }
+                        Toast.makeText(getApplicationContext(),"数据非法无法加入",Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
 
@@ -104,7 +100,7 @@ public class InsertStudentActivity extends Activity {
                             finish();
                         }
                         else{
-                            Toast.makeText(getApplicationContext(),"数据不完整无法加入",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"数据非法无法加入",Toast.LENGTH_SHORT).show();
                         }
                     }
                 } ;
@@ -128,7 +124,7 @@ public class InsertStudentActivity extends Activity {
 
             return false;
         }
-        if(stdId.getText().toString().trim().length()!=0
+        if(stdId.getText().toString().trim().length()==10
                 &&stdName.getText().toString().trim().length()!=0
                 &&stdAge.getText().toString().trim().length()!=0
                 &&stdClass.getText().toString().trim().length()!=0
