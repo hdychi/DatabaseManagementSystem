@@ -65,6 +65,7 @@ public class StudentFragment extends Fragment {
     private String databasePath;
     private DataBaseHelper helper;
 
+    private boolean isAutoRefresh = true;
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savadInstanceState) {
         mContext = getActivity();
@@ -98,6 +99,7 @@ public class StudentFragment extends Fragment {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isAutoRefresh = false;
                 getData();
             }
         });
@@ -179,16 +181,18 @@ public class StudentFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savadInstanceState) {
         super.onActivityCreated(savadInstanceState);
-        getData();
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        isAutoRefresh = true;
         getData();
     }
 
     public void getData() {
+
         Observable<DataBean> observable = Observable.create(new Observable.OnSubscribe<DataBean>() {
             @Override
             public void call(Subscriber<? super DataBean> subscriber) {
@@ -230,7 +234,9 @@ public class StudentFragment extends Fragment {
                 stdGPA.setText("");
                 classGPA.setText("");
                 mAdapter.clear();
-                Toast.makeText(getActivity(), "查询失败", Toast.LENGTH_SHORT).show();
+                if(!isAutoRefresh) {
+                    Toast.makeText(getActivity(), "查询失败", Toast.LENGTH_SHORT).show();
+                }
                 updateButton.setVisibility(View.GONE);
                 deleteButton.setVisibility(View.GONE);
                 Log.i("查询", "错误");

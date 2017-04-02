@@ -74,6 +74,7 @@ public class CourseFragment extends Fragment {
     private DataBaseHelper helper;
     private PieChart mChart;
 
+    private boolean isAutoRefresh = true;
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savadInstanceState){
         mContext =getActivity();
@@ -106,6 +107,7 @@ public class CourseFragment extends Fragment {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isAutoRefresh = false;
                 getData();
             }
         });
@@ -182,11 +184,12 @@ public class CourseFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savadInstanceState){
         super.onActivityCreated(savadInstanceState);
-        getData();
+
     }
     @Override
     public void onResume(){
         super.onResume();
+        isAutoRefresh = true;
         getData();
     }
     public void initialChart(View headView){
@@ -243,7 +246,9 @@ public class CourseFragment extends Fragment {
                 mAdapter.clear();
                 updateButton.setVisibility(View.GONE);
                 deleteButton.setVisibility(View.GONE);
-                Toast.makeText(getActivity(),"查询失败", Toast.LENGTH_SHORT).show();
+                if(!isAutoRefresh) {
+                    Toast.makeText(getActivity(), "查询失败", Toast.LENGTH_SHORT).show();
+                }
                 e.printStackTrace();
             }
 
