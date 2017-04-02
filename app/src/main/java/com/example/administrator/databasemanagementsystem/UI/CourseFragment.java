@@ -26,6 +26,7 @@ import com.example.administrator.databasemanagementsystem.Models.DataBean2;
 import com.example.administrator.databasemanagementsystem.Models.RecyclerItem;
 import com.example.administrator.databasemanagementsystem.Models.Student;
 import com.example.administrator.databasemanagementsystem.R;
+import com.example.administrator.databasemanagementsystem.RecyclerDecoration;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.ChartData;
@@ -100,6 +101,7 @@ public class CourseFragment extends Fragment {
         helper = new DataBaseHelper(db);
         mAdapter = new CourseRecyclerAdapter(mContext,new DataBaseHelper(db),this);
         mRecyclerView.setAdapter(mAdapter);
+
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override

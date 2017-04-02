@@ -289,9 +289,19 @@ public class DataBaseHelper {
         mDatabase.insert("ChooseCourse",null,values);
     }
     public void deleteStudent(String stdId){
+
+        List<ChooseCourse> chooseCourses = getChooseCourseWithStudent(stdId);
+            for (ChooseCourse chooseCourse : chooseCourses) {
+                deleteChoose(chooseCourse.getStdId(), chooseCourse.getCourId());
+            }
+
         mDatabase.delete("Student","stdId=?",new String[]{stdId});
     }
     public void deleteCourse(String courId){
+        List<ChooseCourse> chooseCourses = getChooseCourseWithCourse(courId);
+        for (ChooseCourse chooseCourse : chooseCourses) {
+            deleteChoose(chooseCourse.getStdId(), chooseCourse.getCourId());
+        }
         mDatabase.delete("Course","courId=?",new String[]{courId});
     }
     public void deleteChoose(String stdId,String courId){
@@ -300,7 +310,12 @@ public class DataBaseHelper {
     public void updateStudent(String columnName,String newValues,String stdId){
          ContentValues values = new ContentValues();
          values.put(columnName,newValues);
-
+        if(columnName.equals("stdId")) {
+            List<ChooseCourse> chooseCourses = getChooseCourseWithStudent(stdId);
+            for (ChooseCourse chooseCourse : chooseCourses) {
+                deleteChoose(chooseCourse.getStdId(), chooseCourse.getCourId());
+            }
+        }
           mDatabase.update("Student",values,"stdId=?",new String[]{stdId});
     }
     public void updateStudent(String columName,int newValues,String stdId){
@@ -312,7 +327,12 @@ public class DataBaseHelper {
     public void updateCourse(String columnName,String newValues,String Id){
         ContentValues values = new ContentValues();
         values.put(columnName,newValues);
-
+        if(columnName.equals("courId")) {
+            List<ChooseCourse> chooseCourses = getChooseCourseWithCourse(Id);
+            for (ChooseCourse chooseCourse : chooseCourses) {
+                deleteChoose(chooseCourse.getStdId(), chooseCourse.getCourId());
+            }
+        }
         mDatabase.update("Course",values,"courId=?",new String[]{Id});
     }
     public void updateCourse(String columnName,int newValues,String Id){

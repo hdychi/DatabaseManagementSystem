@@ -13,13 +13,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:text="学生信息:"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -104,5 +98,6 @@
         android:layout_height="wrap_content"
         android:text="确定"
         android:id="@+id/updateStdConfirmButton"
-        android:layout_gravity="right"/>
+        android:layout_gravity="right"
+        android:layout_marginRight="10dp"/>
 </LinearLayout>

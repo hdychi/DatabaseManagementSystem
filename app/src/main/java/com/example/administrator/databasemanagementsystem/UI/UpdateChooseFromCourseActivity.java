@@ -170,10 +170,10 @@ public class UpdateChooseFromCourseActivity extends AppCompatActivity {
         final Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         calendar.setTimeInMillis(System.currentTimeMillis());
-        if((Integer.valueOf(chooseYear.getText().toString().replace(" ",""))>course.getCourCancelYear()&&course.getCourCancelYear()>0)||calendar.get(Calendar.YEAR)-student.getStdYear()+(calendar.get(java.util.Calendar.MONTH)>9?1:0)<course.getCourMinGrade()){
+        if((Integer.valueOf(chooseYear.getText().toString().replace(" ",""))>course.getCourCancelYear()&&course.getCourCancelYear()>0)||Integer.valueOf(chooseYear.getText().toString().replace(" ", ""))-student.getStdYear()+(calendar.get(java.util.Calendar.MONTH)>9?1:0)<course.getCourMinGrade()){
 
 
-            System.out.println("选课年份:"+Integer.valueOf(chooseYear.getText().toString().replace(" ",""))+"取消年份"+course.getCourCancelYear()+"年级"+(calendar.get(Calendar.YEAR)-student.getStdYear()+(calendar.get(java.util.Calendar.MONTH)>9?1:0))+"适合年级"+course.getCourMinGrade());
+            System.out.println("选课年份:"+Integer.valueOf(chooseYear.getText().toString().replace(" ",""))+"取消年份"+course.getCourCancelYear()+"年级"+(Integer.valueOf(chooseYear.getText().toString().replace(" ", ""))-student.getStdYear()+(calendar.get(java.util.Calendar.MONTH)>9?1:0))+"适合年级"+course.getCourMinGrade());
             return false;
         }
         return true;

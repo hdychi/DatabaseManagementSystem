@@ -76,6 +76,7 @@ public class UpdateCourseActivity extends AppCompatActivity{
         originCourMinGrade =  Integer.valueOf((String)bundle.get("courMinGrade"));
         if(((String)bundle.get("courCancelYear")).length()>0) {
             originCourCancelYear = Integer.valueOf((String) bundle.get("courCancelYear"));
+            Log.i("取消年份",""+originCourCancelYear);
         }
         else{
             originCourCancelYear = -1;
@@ -85,7 +86,7 @@ public class UpdateCourseActivity extends AppCompatActivity{
         courTeacherName.setText(originCourTeacherName);
         courCredit.setText(originCourCredit+"");
         courMinGrade.setText(originCourMinGrade+"");
-        courCancelYear.setText(originCourCancelYear>0?courCancelYear+"":"");
+        courCancelYear.setText(originCourCancelYear>0?originCourCancelYear+"":"");
 
         databasePath = Environment.getExternalStorageDirectory()+"/databaseManagement/"+"data.db";
         db = SQLiteDatabase.openOrCreateDatabase(databasePath,null);

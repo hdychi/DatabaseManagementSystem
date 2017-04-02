@@ -1,76 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingTop="5dp"
-        android:paddingRight="10dp">
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="1dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@color/AliceBlue">
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical"
+       android:padding="5dp">
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
 
-            android:text="学生学号："/>
-        <TextView
-            android:layout_width="105dp"
-            android:layout_height="wrap_content"
+           android:paddingBottom="5dp"
+           android:paddingTop="5dp">
 
-            android:id="@+id/courFragstdId"/>
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
+           <TextView
+               android:layout_width="80dp"
+               android:layout_height="wrap_content"
 
-            android:text="学生名字："/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+               android:text="学生学号：" />
 
-            android:id="@+id/courFragstdName"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingTop="5dp">
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
+           <TextView
+               android:id="@+id/courFragstdId"
+               android:layout_width="105dp"
 
-            android:text="选课年份："/>
-        <TextView
-            android:layout_width="105dp"
-            android:layout_height="wrap_content"
+               android:layout_height="wrap_content" />
 
-            android:id="@+id/courFragChooseYear"/>
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
+           <TextView
+               android:layout_width="80dp"
+               android:layout_height="wrap_content"
 
-            android:text="课程得分："/>
-        <TextView
-            android:layout_width="105dp"
-            android:layout_height="wrap_content"
+               android:text="学生名字：" />
 
-            android:id="@+id/courFragGrade"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="right">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="修改"
-            android:id="@+id/course_list_item_update_button"
-            android:layout_gravity="right"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="删除"
-            android:id="@+id/course_list_item_delete_button"
-            android:layout_gravity="right"/>
-    </LinearLayout>
-</LinearLayout>
+           <TextView
+               android:id="@+id/courFragstdName"
+               android:layout_width="wrap_content"
+
+               android:layout_height="wrap_content" />
+       </LinearLayout>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+
+           android:paddingTop="5dp">
+
+           <TextView
+               android:layout_width="80dp"
+               android:layout_height="wrap_content"
+
+               android:text="选课年份：" />
+
+           <TextView
+               android:id="@+id/courFragChooseYear"
+               android:layout_width="105dp"
+
+               android:layout_height="wrap_content" />
+
+           <TextView
+               android:layout_width="80dp"
+               android:layout_height="wrap_content"
+
+               android:text="课程得分：" />
+
+           <TextView
+               android:id="@+id/courFragGrade"
+               android:layout_width="105dp"
+
+               android:layout_height="wrap_content" />
+       </LinearLayout>
+
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="right"
+           android:orientation="horizontal"
+           android:paddingTop="5dp">
+
+           <Button
+               android:id="@+id/course_list_item_update_button"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="right"
+               android:layout_marginRight="10dp"
+               android:text="修改" />
+
+           <Button
+               android:id="@+id/course_list_item_delete_button"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="right"
+               android:layout_marginRight="10dp"
+               android:text="删除" />
+       </LinearLayout>
+   </LinearLayout>
+
+</android.support.v7.widget.CardView>

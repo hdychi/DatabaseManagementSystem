@@ -11,13 +11,7 @@
         android:background="@color/lightBlue"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:text="课程信息:"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -92,7 +86,7 @@
 
             android:text="取消年份："/>
         <EditText
-            android:layout_width="105dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
             android:id="@+id/updateCourYear"/>
@@ -102,5 +96,6 @@
         android:layout_height="wrap_content"
         android:text="确定"
         android:id="@+id/updateCourConfirmButton"
-        android:layout_gravity="right"/>
+        android:layout_gravity="right"
+        android:layout_marginRight="10dp"/>
 </LinearLayout>

@@ -154,10 +154,7 @@ public class UpdateStudentActivity extends AppCompatActivity {
     }
     public void updateID(String value){
         if(!value.equals(originID)&&value.length()==10){
-            List<ChooseCourse> chooseCourses =  helper.getChooseCourseWithStudent(originID);
-           for(ChooseCourse chooseCourse:chooseCourses){
-               helper.deleteChoose(chooseCourse.getStdId(),chooseCourse.getCourId());
-           }
+
             helper.updateStudent("stdId",value,originID);
         }
     }

@@ -64,35 +64,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initialViews() {
-        /*addButton = (Button)findViewById(R.id.add_button);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(MainActivity.this,v);
-                final MenuInflater inflater = popupMenu.getMenuInflater();
-                inflater.inflate(R.menu.main_menu,popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        Intent intent = new Intent();
-                        if(item.getItemId()==R.id.menu_insert_student){
-                            intent.setClass(MainActivity.this, InsertStudentActivity.class);
-                            startActivity(intent);
-                        }
-                        else if(item.getItemId()==R.id.menu_insert_course){
-                            intent.setClass(MainActivity.this, InsertCourseActivity.class);
-                            startActivity(intent);
-                        }
-                        else{
-                            intent.setClass(MainActivity.this, InsertChooseAcrivity.class);
-                            startActivity(intent);
-                        }
-                        return false;
-                    }
-                });
-                popupMenu.show();
-            }
-        });*/
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbar.setTitle("学生选课信息管理系统");
 
@@ -168,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         databasePath = Environment.getExternalStorageDirectory() + "/databaseManagement/" + "data.db";
 
         database = SQLiteDatabase.openOrCreateDatabase(databasePath, null);
-
+        database.execSQL("PRAGMA foreign_keys=ON");
         String str1 = "create table if not exists Student(stdId char(10),stdName varchar(30),\n" +
                 "                stdGender varchar(10),stdAge integer,\n" +
                 "                stdInYear integer,stdClass varchar(10),\n" +

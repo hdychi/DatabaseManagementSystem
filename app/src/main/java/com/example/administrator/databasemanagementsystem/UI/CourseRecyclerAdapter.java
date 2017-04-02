@@ -2,6 +2,7 @@ package com.example.administrator.databasemanagementsystem.UI;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -67,7 +68,7 @@ public class CourseRecyclerAdapter extends RecyclerView.Adapter<CourseRecyclerAd
     }
     @Override
     public mViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        LinearLayout layout = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.course_list_item,parent,false);
+        CardView layout = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.course_list_item,parent,false);
         mViewHolder holder = new mViewHolder(layout) ;
         return holder;
     }
