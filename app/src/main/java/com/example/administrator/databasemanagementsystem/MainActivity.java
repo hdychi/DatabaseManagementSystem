@@ -1,32 +1,28 @@
 package com.example.administrator.databasemanagementsystem;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
 import com.example.administrator.databasemanagementsystem.Models.fragmentAdapter;
-import com.example.administrator.databasemanagementsystem.UI.CourseFragment;
-import com.example.administrator.databasemanagementsystem.UI.InsertChooseAcrivity;
-import com.example.administrator.databasemanagementsystem.UI.InsertCourseActivity;
-import com.example.administrator.databasemanagementsystem.UI.InsertStudentActivity;
-import com.example.administrator.databasemanagementsystem.UI.StudentFragment;
+import com.example.administrator.databasemanagementsystem.UI.Fragments.CourseFragment;
+import com.example.administrator.databasemanagementsystem.UI.Activities.InsertChooseAcrivity;
+import com.example.administrator.databasemanagementsystem.UI.Activities.InsertCourseActivity;
+import com.example.administrator.databasemanagementsystem.UI.Activities.InsertStudentActivity;
+import com.example.administrator.databasemanagementsystem.UI.Fragments.StudentFragment;
 
 import java.io.File;
 import java.util.ArrayList;

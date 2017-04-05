@@ -1,4 +1,4 @@
-package com.example.administrator.databasemanagementsystem.UI;
+package com.example.administrator.databasemanagementsystem.UI.Activities;
 
 import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;

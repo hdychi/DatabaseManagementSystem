@@ -1,4 +1,4 @@
-package com.example.administrator.databasemanagementsystem.UI;
+package com.example.administrator.databasemanagementsystem.UI.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,12 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.administrator.databasemanagementsystem.DataBaseHelper;
 import com.example.administrator.databasemanagementsystem.Models.RecyclerItem;
 import com.example.administrator.databasemanagementsystem.R;
+import com.example.administrator.databasemanagementsystem.UI.Activities.UpdateChooseFromStudentActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,29 +27,22 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by Administrator on 2017/3/19.
+ * Created by Administrator on 2017/3/13.
  */
 
-public class CourseRecyclerAdapter extends RecyclerView.Adapter<CourseRecyclerAdapter.mViewHolder> {
+public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecyclerAdapter.IViewHolder>{
     private List<RecyclerItem> mItems;
     private RecyclerItem nowItem;
     private Context mContext;
     private DataBaseHelper mHelper;
-    private CourseFragment mFragment;
-    public CourseRecyclerAdapter(Context context){
+    public StudentRecyclerAdapter(Context context){
         mItems = new ArrayList<>();
         mContext = context;
     }
-    public CourseRecyclerAdapter(Context context,DataBaseHelper helper){
-        mItems = new ArrayList<>();
+    public StudentRecyclerAdapter(Context context,DataBaseHelper helper){
         mContext = context;
-        mHelper = helper;
-    }
-    public CourseRecyclerAdapter(Context context,DataBaseHelper helper,CourseFragment fragment){
         mItems = new ArrayList<>();
-        mContext = context;
         mHelper = helper;
-        mFragment = fragment;
     }
     public void  addAll(Collection<RecyclerItem> list){
         mItems.addAll(list);
@@ -67,26 +60,39 @@ public class CourseRecyclerAdapter extends RecyclerView.Adapter<CourseRecyclerAd
         mItems.add(item);
     }
     @Override
-    public mViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        CardView layout = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.course_list_item,parent,false);
-        mViewHolder holder = new mViewHolder(layout) ;
+    public IViewHolder onCreateViewHolder(ViewGroup parent,int viewType){
+        CardView layout = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item,parent,false);
+        IViewHolder holder = new IViewHolder(layout);
         return holder;
     }
     @Override
-    public void onBindViewHolder(mViewHolder holder,final int position){
+    public void onBindViewHolder(IViewHolder holder, final int position){
         View itemLayout = (View)holder.itemView;
         nowItem = mItems.get(position);
-        final TextView stdId = (TextView)itemLayout.findViewById(R.id.courFragstdId);
-        final TextView stdName = (TextView)itemLayout.findViewById(R.id.courFragstdName);
-        final TextView stdChooseYear = (TextView)itemLayout.findViewById(R.id.courFragChooseYear);
-        final TextView stdGrade = (TextView)itemLayout.findViewById(R.id.courFragGrade);
-        final Button updateButton = (Button) itemLayout.findViewById(R.id.course_list_item_update_button);
-        final Button deleteButton = (Button)itemLayout.findViewById(R.id.course_list_item_delete_button);
+        final TextView courId = (TextView)itemLayout.findViewById(R.id.chooseCourId);
+        final TextView courName = (TextView)itemLayout.findViewById(R.id.chooseCourName);
+        final TextView teacher = (TextView)itemLayout.findViewById(R.id.courTeacherName);
+        final TextView courCredit = (TextView)itemLayout.findViewById(R.id.courCredit);
+        final TextView minGrade = (TextView)itemLayout.findViewById(R.id.courMinGrade);
+        final TextView cancelYear = (TextView)itemLayout.findViewById(R.id.courCancelYear);
+        final TextView chooseYear = (TextView)itemLayout.findViewById(R.id.chooseYear);
+        final TextView grade = (TextView)itemLayout.findViewById(R.id.grade);
+        final Button updateButton = (Button)itemLayout.findViewById(R.id.list_item_update_button);
+        final Button deleteButton = (Button)itemLayout.findViewById(R.id.list_item_delete_button);
 
-        stdId.setText(nowItem.getStudent().getStdId());
-        stdName.setText(nowItem.getStudent().getStdName());
-        stdChooseYear.setText(nowItem.getChooseCourse().getChooseYear()+"");
-        stdGrade.setText(nowItem.getChooseCourse().getGrade()+"");
+        courId.setText(nowItem.getCourse().getCourId());
+        courName.setText(nowItem.getCourse().getCourName());
+        teacher.setText(nowItem.getCourse().getCourTeacherName());
+        courCredit.setText(nowItem.getCourse().getCourCredit()+"");
+        minGrade.setText(nowItem.getCourse().getCourMinGrade()+"");
+        if(nowItem.getCourse().getCourCancelYear()>0) {
+            cancelYear.setText(nowItem.getCourse().getCourCancelYear() + "");
+        }
+        else{
+            cancelYear.setText("");
+        }
+        chooseYear.setText(nowItem.getChooseCourse().getChooseYear()+"");
+        grade.setText(nowItem.getChooseCourse().getGrade()+"");
 
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,15 +102,13 @@ public class CourseRecyclerAdapter extends RecyclerView.Adapter<CourseRecyclerAd
                 intent.putExtra("courId",mItems.get(position).getCourse().getCourId());
                 intent.putExtra("chooseYear",mItems.get(position).getChooseCourse().getChooseYear());
                 intent.putExtra("grade",mItems.get(position).getChooseCourse().getGrade());
-                intent.setClass(mContext,UpdateChooseFromCourseActivity.class);
-                Log.i("适配器位置",position+"");
+                intent.setClass(mContext,UpdateChooseFromStudentActivity.class);
                 mContext.startActivity(intent);
             }
         });
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("适配器位置",position+"");
                 Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
                     @Override
                     public void call(Subscriber<? super String> subscriber) {
@@ -120,17 +124,16 @@ public class CourseRecyclerAdapter extends RecyclerView.Adapter<CourseRecyclerAd
 
                     @Override
                     public void onError(Throwable e) {
-                        if(e instanceof IOException){
-                            Log.i("删除","异常");
-                        }
+                       if(e instanceof IOException){
+                          Log.i("删除","异常");
+                       }
                         e.printStackTrace();
                     }
 
                     @Override
                     public void onNext(String s) {
-                        mItems.remove(position);
-                        notifyDataSetChanged();
-                        mFragment.getData();
+                         mItems.remove(position);
+                         notifyDataSetChanged();
                     }
                 };
                 observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
@@ -141,9 +144,9 @@ public class CourseRecyclerAdapter extends RecyclerView.Adapter<CourseRecyclerAd
     public int getItemCount() {
         return mItems.size();
     }
-    public static class mViewHolder extends RecyclerView.ViewHolder {
+    public static class IViewHolder extends RecyclerView.ViewHolder {
 
-        public mViewHolder(View itemView) {
+        public IViewHolder(View itemView) {
             super(itemView);
         }
     }

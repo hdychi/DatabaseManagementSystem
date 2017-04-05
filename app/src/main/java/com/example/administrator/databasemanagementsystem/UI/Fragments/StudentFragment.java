@@ -1,9 +1,8 @@
-package com.example.administrator.databasemanagementsystem.UI;
+package com.example.administrator.databasemanagementsystem.UI.Fragments;
 
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,7 +26,8 @@ import com.example.administrator.databasemanagementsystem.Models.DataBean;
 import com.example.administrator.databasemanagementsystem.Models.RecyclerItem;
 import com.example.administrator.databasemanagementsystem.Models.Student;
 import com.example.administrator.databasemanagementsystem.R;
-import com.example.administrator.databasemanagementsystem.RecyclerDecoration;
+import com.example.administrator.databasemanagementsystem.UI.Adapters.StudentRecyclerAdapter;
+import com.example.administrator.databasemanagementsystem.UI.Activities.UpdateStudentActivity;
 
 import java.io.IOException;
 import java.util.ArrayList;

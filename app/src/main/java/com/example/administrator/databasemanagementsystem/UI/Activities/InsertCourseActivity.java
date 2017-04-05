@@ -1,4 +1,4 @@
-package com.example.administrator.databasemanagementsystem.UI;
+package com.example.administrator.databasemanagementsystem.UI.Activities;
 
 import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,16 +17,18 @@ import android.widget.Toast;
 import com.example.administrator.databasemanagementsystem.DataBaseHelper;
 import com.example.administrator.databasemanagementsystem.R;
 
+import java.io.IOException;
+
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by Administrator on 2017/3/17.
+ * Created by Administrator on 2017/3/26.
  */
 
-public class UpdateCourseActivity extends AppCompatActivity{
+public class InsertCourseActivity extends AppCompatActivity {
     private Button comfirmButton;
     private EditText courId;
     private EditText courName;
@@ -59,7 +61,7 @@ public class UpdateCourseActivity extends AppCompatActivity{
         courCancelYear = (EditText)findViewById(R.id.updateCourYear);
         comfirmButton = (Button)findViewById(R.id.updateCourConfirmButton);
         mToolbar = (Toolbar)findViewById(R.id.update_cour_toolbar);
-        mToolbar.setTitle("更新课程信息");
+        mToolbar.setTitle("插入课程信息");
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -68,25 +70,8 @@ public class UpdateCourseActivity extends AppCompatActivity{
                 finish();
             }
         });
-        Bundle bundle  = this.getIntent().getExtras();
-        originCourId = (String)bundle.get("courId");
-        originCourName = (String)bundle.get("courName");
-        originCourTeacherName = (String)bundle.get("courTeacherName");
-        originCourCredit = Integer.valueOf((String)bundle.get("courCredit"));
-        originCourMinGrade =  Integer.valueOf((String)bundle.get("courMinGrade"));
-        if(((String)bundle.get("courCancelYear")).length()>0) {
-            originCourCancelYear = Integer.valueOf((String) bundle.get("courCancelYear"));
-            Log.i("取消年份",""+originCourCancelYear);
-        }
-        else{
-            originCourCancelYear = -1;
-        }
-        courId.setText(originCourId);
-        courName.setText(originCourName);
-        courTeacherName.setText(originCourTeacherName);
-        courCredit.setText(originCourCredit+"");
-        courMinGrade.setText(originCourMinGrade+"");
-        courCancelYear.setText(originCourCancelYear>0?originCourCancelYear+"":"");
+
+
 
         databasePath = Environment.getExternalStorageDirectory()+"/databaseManagement/"+"data.db";
         db = SQLiteDatabase.openOrCreateDatabase(databasePath,null);
@@ -98,24 +83,8 @@ public class UpdateCourseActivity extends AppCompatActivity{
                 Observable<Boolean> observable = Observable.create(new Observable.OnSubscribe<Boolean>() {
                     @Override
                     public void call(Subscriber<? super Boolean> subscriber) {
-                        if(!checkLegal()){
-                            subscriber.onNext(false);
-                            Log.i("更新课程","判断数据不合法");
-                            return;
-                        }
-                        updateId(courId.getText().toString().trim());
-                        updateName(courName.getText().toString().trim());
-                        updateCredit(Integer.valueOf(courCredit.getText().toString().trim()));
-
-                        updateMinGrade(Integer.valueOf(courMinGrade.getText().toString().replace(" ","")));
-                        updateTeacher(courTeacherName.getText().toString().trim());
-                        if(courCancelYear.getText().toString().replace(" ","").length()>0) {
-                            updateCancelYear(Integer.valueOf(courCancelYear.getText().toString().replace(" ", "")));
-                        }
-                        else{
-                            updateCancelYear(-1);
-                        }
-                        subscriber.onNext(true);
+                        insertData();
+                        subscriber.onNext(insertData());
                     }
                 });
                 Subscriber<Boolean> subscriber = new Subscriber<Boolean>() {
@@ -126,16 +95,22 @@ public class UpdateCourseActivity extends AppCompatActivity{
 
                     @Override
                     public void onError(Throwable e) {
-                        Toast.makeText(getApplicationContext(),"数据不合法无法更新" ,Toast.LENGTH_SHORT).show();
+                        if(e instanceof IOException){
+                            Log.i("IOE","EXception");
+
+                        }
+                        Log.i("插入课程","异常");
+                        Toast.makeText(getApplicationContext(),"数据非法无法插入",Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
 
                     @Override
                     public void onNext(Boolean s) {
-                        if(!s){
-                            Toast.makeText(getApplicationContext(),"数据不合法无法更新" ,Toast.LENGTH_SHORT).show();
-                        }else {
+                        if(s) {
                             finish();
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(),"数据非法无法插入",Toast.LENGTH_SHORT).show();
                         }
                     }
                 };
@@ -143,40 +118,10 @@ public class UpdateCourseActivity extends AppCompatActivity{
             }
         });
     }
-    public void updateId(String id){
-        if(!id.equals(originCourId)&&id.length()==7){
-            helper.updateCourse("courId",id,originCourId);
-        }
-    }
-    public void updateName(String name){
-        if(!name.equals(originCourName)){
-            helper.updateCourse("courName",name,originCourId);
-        }
-    }
-    public void updateTeacher(String teacher){
-        if(!teacher.equals(originCourTeacherName)){
-            helper.updateCourse("courTeacherName",teacher,originCourId);
-        }
-    }
-    public void updateCredit(int credit){
-        if(credit!=originCourCredit){
-           helper.updateCourse("courCredit",credit,originCourId);
-        }
-    }
-    public void updateMinGrade(int grade){
-        if(grade!=originCourMinGrade){
-            helper.updateCourse("courMinGrade",grade,originCourId);
-        }
-    }
-    public void updateCancelYear(int cancelYear){
-        if(cancelYear!=originCourCancelYear){
-            helper.updateCourse("courCancelYear",cancelYear,originCourId);
-        }
-    }
-    public boolean checkLegal(){
+    public boolean insertData(){
         if(TextUtils.isEmpty(courId.getText())
-                ||TextUtils.isEmpty(courName.getText())
-                ||TextUtils.isEmpty(courTeacherName.getText())
+        ||TextUtils.isEmpty(courName.getText())
+        ||TextUtils.isEmpty(courTeacherName.getText())
                 ||TextUtils.isEmpty(courCredit.getText())
                 ||TextUtils.isEmpty(courMinGrade.getText())){
             return false;
@@ -186,11 +131,20 @@ public class UpdateCourseActivity extends AppCompatActivity{
                 &&courTeacherName.getText().toString().trim().length()!=0
                 &&courCredit.getText().toString().trim().length()!=0
                 &&courMinGrade.getText().toString().trim().length()!=0){
-
-
-            return true;
+            if(courCancelYear.getText().toString().replace(" ","").length()>0) {
+                helper.insertCourse(courId.getText().toString().trim(), courName.getText().toString().trim(),
+                        courTeacherName.getText().toString().trim(), Integer.valueOf(courCredit.getText().toString().replace(" ", "")),
+                        Integer.valueOf(courMinGrade.getText().toString().replace(" ", "")),
+                        Integer.valueOf(courCancelYear.getText().toString().replace(" ", "")));
+            }
+            else{
+                helper.insertCourse(courId.getText().toString().trim(), courName.getText().toString().trim(),
+                        courTeacherName.getText().toString().trim(), Integer.valueOf(courCredit.getText().toString().replace(" ", "")),
+                        Integer.valueOf(courMinGrade.getText().toString().replace(" ", "")),
+                        -1);
+            }
+          return true;
         }
         return false;
     }
-
 }

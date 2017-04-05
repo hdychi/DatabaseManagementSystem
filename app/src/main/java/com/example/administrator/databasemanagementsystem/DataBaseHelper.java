@@ -248,81 +248,41 @@ public class DataBaseHelper {
 
     }
     public void insertStudent(String stdId,String stdName,String stdGender,int stdAge,int stdYear,String stdClass){
-        ContentValues values = new ContentValues();
+        mDatabase.execSQL("insert into Student(stdId,stdName,stdGender,stdAge,stdInYear,stdClass) values (?,?,?,?,?,?);",
+                new Object[]{stdId,stdName,stdGender,stdAge,stdYear,stdClass});
 
-        values.put("stdId",stdId);
-        values.put("stdName",stdName);
-        values.put("stdGender",stdGender);
-        values.put("stdAge",stdAge);
-        values.put("stdInYear",stdYear);
-        values.put("stdClass",stdClass);
-        for(String key:values.keySet()){
-            Log.i("检查values",key+values.get(key));
-        }
-        if(mDatabase.insert("Student",null,values)<0){
-            Log.i("插入","失败");
-        }
-        else{
-            Log.i("插入","成功");
-        }
 
     }
     public void insertCourse(String courId,String courName,String courTeacherName,int courCredit,int courMinGrade,int courCancelYear){
-        ContentValues values = new ContentValues();
-        values.put("courId",courId);
-        values.put("courName",courName);
-        values.put("courTeacherName",courTeacherName);
-        values.put("courCredit",courCredit);
-        values.put("courMinGrade",courMinGrade);
-
-        values.put("courCancelYear", courCancelYear);
-
-        mDatabase.insert("Course",null,values);
+      mDatabase.execSQL("insert into Course(courId,courName,courTeacherName,courCredit,courMinGrade,courCancelYear) values (?,?,?,?,?,?)",
+              new Object[]{courId,courName,courTeacherName,courCredit,courMinGrade,courCancelYear});
     }
     public void insertChoose(String stdId,String courId,int chooseYear,int grade){
-        ContentValues values = new ContentValues();
-        values.put("stdId",stdId);
-        values.put("courId",courId);
-        values.put("chooseYear",chooseYear);
-        values.put("grade",grade);
-
-        mDatabase.insert("ChooseCourse",null,values);
+       mDatabase.execSQL("insert into ChooseCourse(stdId,courId,chooseYear,grade) values (?,?,?,?)",new Object[]{stdId,courId,chooseYear,grade});
     }
     public void deleteStudent(String stdId){
 
-        List<ChooseCourse> chooseCourses = getChooseCourseWithStudent(stdId);
-            for (ChooseCourse chooseCourse : chooseCourses) {
-                deleteChoose(chooseCourse.getStdId(), chooseCourse.getCourId());
-            }
-
-        mDatabase.delete("Student","stdId=?",new String[]{stdId});
+     mDatabase.execSQL("delete from Student where stdId=?",new Object[]{stdId});
     }
     public void deleteCourse(String courId){
-        List<ChooseCourse> chooseCourses = getChooseCourseWithCourse(courId);
-        for (ChooseCourse chooseCourse : chooseCourses) {
-            deleteChoose(chooseCourse.getStdId(), chooseCourse.getCourId());
-        }
-        mDatabase.delete("Course","courId=?",new String[]{courId});
+       mDatabase.execSQL("delete from Course where courId=?",new Object[]{courId});
     }
     public void deleteChoose(String stdId,String courId){
-        mDatabase.delete("ChooseCourse","stdId=? and courId=?",new String[]{stdId,courId});
+       mDatabase.execSQL("delete from ChooseCourse where stdId=? and courId=?",new Object[]{stdId,courId});
     }
     public void updateStudent(String columnName,String newValues,String stdId){
-         ContentValues values = new ContentValues();
-         values.put(columnName,newValues);
+
         if(columnName.equals("stdId")) {
             List<ChooseCourse> chooseCourses = getChooseCourseWithStudent(stdId);
             for (ChooseCourse chooseCourse : chooseCourses) {
                 deleteChoose(chooseCourse.getStdId(), chooseCourse.getCourId());
             }
         }
-          mDatabase.update("Student",values,"stdId=?",new String[]{stdId});
+
+        mDatabase.execSQL("update Student set "+columnName+"=? where stdId=?",new Object[]{newValues,stdId});
     }
     public void updateStudent(String columName,int newValues,String stdId){
-        ContentValues values = new ContentValues();
-        values.put(columName,newValues);
-
-        mDatabase.update("Student",values,"stdId=?",new String[]{stdId});
+        mDatabase.execSQL("update Student set "+columName+"=? where stdId=?",new Object[]{newValues,stdId});
     }
     public void updateCourse(String columnName,String newValues,String Id){
         ContentValues values = new ContentValues();
@@ -333,24 +293,15 @@ public class DataBaseHelper {
                 deleteChoose(chooseCourse.getStdId(), chooseCourse.getCourId());
             }
         }
-        mDatabase.update("Course",values,"courId=?",new String[]{Id});
+       mDatabase.execSQL("update Course set "+columnName+"=? where courId=?",new Object[]{newValues,Id});
     }
     public void updateCourse(String columnName,int newValues,String Id){
-        ContentValues values = new ContentValues();
-        values.put(columnName,newValues);
-
-        mDatabase.update("Course",values,"courId=?",new String[]{Id});
+        mDatabase.execSQL("update Course set "+columnName+"=? where courId=?",new Object[]{newValues,Id});
     }
     public void updateChoose(String columnName,String newValues,String stdId,String courId){
-        ContentValues values = new ContentValues();
-        values.put(columnName,newValues);
-
-        mDatabase.update("ChooseCourse",values,"stdId=? and courId=?",new String[]{stdId,courId});
+       mDatabase.execSQL("update ChooseCourse set "+columnName+"=? where stdId=? and courId=?",new Object[]{newValues,stdId,courId});
     }
     public void updateChoose(String columnName,int newValues,String stdId,String courId){
-        ContentValues values = new ContentValues();
-        values.put(columnName,newValues);
-
-        mDatabase.update("ChooseCourse",values,"stdId=? and courId=?",new String[]{stdId,courId});
+        mDatabase.execSQL("update ChooseCourse set "+columnName+"=? where stdId=? and courId=?",new Object[]{newValues,stdId,courId});
     }
 }

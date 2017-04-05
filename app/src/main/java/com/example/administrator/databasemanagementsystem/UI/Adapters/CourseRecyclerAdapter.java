@@ -1,4 +1,4 @@
-package com.example.administrator.databasemanagementsystem.UI;
+package com.example.administrator.databasemanagementsystem.UI.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,12 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.administrator.databasemanagementsystem.DataBaseHelper;
 import com.example.administrator.databasemanagementsystem.Models.RecyclerItem;
 import com.example.administrator.databasemanagementsystem.R;
+import com.example.administrator.databasemanagementsystem.UI.Activities.UpdateChooseFromCourseActivity;
+import com.example.administrator.databasemanagementsystem.UI.Fragments.CourseFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,22 +28,29 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by Administrator on 2017/3/13.
+ * Created by Administrator on 2017/3/19.
  */
 
-public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecyclerAdapter.IViewHolder>{
+public class CourseRecyclerAdapter extends RecyclerView.Adapter<CourseRecyclerAdapter.mViewHolder> {
     private List<RecyclerItem> mItems;
     private RecyclerItem nowItem;
     private Context mContext;
     private DataBaseHelper mHelper;
-    public StudentRecyclerAdapter(Context context){
+    private CourseFragment mFragment;
+    public CourseRecyclerAdapter(Context context){
         mItems = new ArrayList<>();
         mContext = context;
     }
-    public StudentRecyclerAdapter(Context context,DataBaseHelper helper){
-        mContext = context;
+    public CourseRecyclerAdapter(Context context,DataBaseHelper helper){
         mItems = new ArrayList<>();
+        mContext = context;
         mHelper = helper;
+    }
+    public CourseRecyclerAdapter(Context context,DataBaseHelper helper,CourseFragment fragment){
+        mItems = new ArrayList<>();
+        mContext = context;
+        mHelper = helper;
+        mFragment = fragment;
     }
     public void  addAll(Collection<RecyclerItem> list){
         mItems.addAll(list);
@@ -60,39 +68,26 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
         mItems.add(item);
     }
     @Override
-    public IViewHolder onCreateViewHolder(ViewGroup parent,int viewType){
-        CardView layout = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item,parent,false);
-        IViewHolder holder = new IViewHolder(layout);
+    public mViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        CardView layout = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.course_list_item,parent,false);
+        mViewHolder holder = new mViewHolder(layout) ;
         return holder;
     }
     @Override
-    public void onBindViewHolder(IViewHolder holder, final int position){
+    public void onBindViewHolder(mViewHolder holder,final int position){
         View itemLayout = (View)holder.itemView;
         nowItem = mItems.get(position);
-        final TextView courId = (TextView)itemLayout.findViewById(R.id.chooseCourId);
-        final TextView courName = (TextView)itemLayout.findViewById(R.id.chooseCourName);
-        final TextView teacher = (TextView)itemLayout.findViewById(R.id.courTeacherName);
-        final TextView courCredit = (TextView)itemLayout.findViewById(R.id.courCredit);
-        final TextView minGrade = (TextView)itemLayout.findViewById(R.id.courMinGrade);
-        final TextView cancelYear = (TextView)itemLayout.findViewById(R.id.courCancelYear);
-        final TextView chooseYear = (TextView)itemLayout.findViewById(R.id.chooseYear);
-        final TextView grade = (TextView)itemLayout.findViewById(R.id.grade);
-        final Button updateButton = (Button)itemLayout.findViewById(R.id.list_item_update_button);
-        final Button deleteButton = (Button)itemLayout.findViewById(R.id.list_item_delete_button);
+        final TextView stdId = (TextView)itemLayout.findViewById(R.id.courFragstdId);
+        final TextView stdName = (TextView)itemLayout.findViewById(R.id.courFragstdName);
+        final TextView stdChooseYear = (TextView)itemLayout.findViewById(R.id.courFragChooseYear);
+        final TextView stdGrade = (TextView)itemLayout.findViewById(R.id.courFragGrade);
+        final Button updateButton = (Button) itemLayout.findViewById(R.id.course_list_item_update_button);
+        final Button deleteButton = (Button)itemLayout.findViewById(R.id.course_list_item_delete_button);
 
-        courId.setText(nowItem.getCourse().getCourId());
-        courName.setText(nowItem.getCourse().getCourName());
-        teacher.setText(nowItem.getCourse().getCourTeacherName());
-        courCredit.setText(nowItem.getCourse().getCourCredit()+"");
-        minGrade.setText(nowItem.getCourse().getCourMinGrade()+"");
-        if(nowItem.getCourse().getCourCancelYear()>0) {
-            cancelYear.setText(nowItem.getCourse().getCourCancelYear() + "");
-        }
-        else{
-            cancelYear.setText("");
-        }
-        chooseYear.setText(nowItem.getChooseCourse().getChooseYear()+"");
-        grade.setText(nowItem.getChooseCourse().getGrade()+"");
+        stdId.setText(nowItem.getStudent().getStdId());
+        stdName.setText(nowItem.getStudent().getStdName());
+        stdChooseYear.setText(nowItem.getChooseCourse().getChooseYear()+"");
+        stdGrade.setText(nowItem.getChooseCourse().getGrade()+"");
 
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,13 +97,15 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
                 intent.putExtra("courId",mItems.get(position).getCourse().getCourId());
                 intent.putExtra("chooseYear",mItems.get(position).getChooseCourse().getChooseYear());
                 intent.putExtra("grade",mItems.get(position).getChooseCourse().getGrade());
-                intent.setClass(mContext,UpdateChooseFromStudentActivity.class);
+                intent.setClass(mContext,UpdateChooseFromCourseActivity.class);
+                Log.i("适配器位置",position+"");
                 mContext.startActivity(intent);
             }
         });
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("适配器位置",position+"");
                 Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
                     @Override
                     public void call(Subscriber<? super String> subscriber) {
@@ -124,16 +121,17 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
 
                     @Override
                     public void onError(Throwable e) {
-                       if(e instanceof IOException){
-                          Log.i("删除","异常");
-                       }
+                        if(e instanceof IOException){
+                            Log.i("删除","异常");
+                        }
                         e.printStackTrace();
                     }
 
                     @Override
                     public void onNext(String s) {
-                         mItems.remove(position);
-                         notifyDataSetChanged();
+                        mItems.remove(position);
+                        notifyDataSetChanged();
+                        mFragment.getData();
                     }
                 };
                 observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
@@ -144,9 +142,9 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
     public int getItemCount() {
         return mItems.size();
     }
-    public static class IViewHolder extends RecyclerView.ViewHolder {
+    public static class mViewHolder extends RecyclerView.ViewHolder {
 
-        public IViewHolder(View itemView) {
+        public mViewHolder(View itemView) {
             super(itemView);
         }
     }

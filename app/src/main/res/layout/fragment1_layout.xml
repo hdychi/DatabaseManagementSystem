@@ -54,7 +54,7 @@
                          android:layout_marginLeft="100dp"
                          android:layout_marginRight="10dp"
                          android:layout_weight="1"
-                         android:background="@drawable/shape"
+
                          android:elevation="1dp"
                          android:text="确定" />
                  </LinearLayout>

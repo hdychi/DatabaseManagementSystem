@@ -1,4 +1,4 @@
-package com.example.administrator.databasemanagementsystem.UI;
+package com.example.administrator.databasemanagementsystem.UI.Fragments;
 
 
 import android.content.Context;
@@ -21,16 +21,14 @@ import android.widget.Toast;
 import com.example.administrator.databasemanagementsystem.DataBaseHelper;
 import com.example.administrator.databasemanagementsystem.Models.ChooseCourse;
 import com.example.administrator.databasemanagementsystem.Models.Course;
-import com.example.administrator.databasemanagementsystem.Models.DataBean;
 import com.example.administrator.databasemanagementsystem.Models.DataBean2;
 import com.example.administrator.databasemanagementsystem.Models.RecyclerItem;
 import com.example.administrator.databasemanagementsystem.Models.Student;
 import com.example.administrator.databasemanagementsystem.R;
-import com.example.administrator.databasemanagementsystem.RecyclerDecoration;
+import com.example.administrator.databasemanagementsystem.UI.Adapters.CourseRecyclerAdapter;
+import com.example.administrator.databasemanagementsystem.UI.Activities.UpdateCourseActivity;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -45,9 +43,6 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-
-import static com.example.administrator.databasemanagementsystem.R.id.pieChart;
-import static com.example.administrator.databasemanagementsystem.R.id.stdGPA;
 
 /**
  * Created by Administrator on 2017/3/19.
