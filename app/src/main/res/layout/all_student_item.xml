@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.administrator.databasemanagementsystem.viewModels.StudentItemViewModel"/>
+
+    </data>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="1dp"
+        app:cardElevation="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="学生信息:"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+
+                    android:text="学生学号：" />
+
+                <TextView
+                    android:id="@+id/stdId"
+                    android:layout_width="105dp"
+                    android:text="@{viewModel.stdId}"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+
+                    android:text="学生姓名：" />
+
+                <TextView
+                    android:id="@+id/stdName"
+                    android:layout_width="wrap_content"
+                    android:text="@{viewModel.stdName}"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+
+                    android:text="入学年龄：" />
+
+                <TextView
+                    android:id="@+id/stdAge"
+                    android:layout_width="105dp"
+                    android:text="@{String.valueOf(viewModel.stdAge)}"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+
+                    android:text="入学年份：" />
+
+                <TextView
+                    android:id="@+id/stdInYear"
+                    android:layout_width="105dp"
+                    android:text="@{String.valueOf(viewModel.stdYear)}"
+                    android:layout_height="wrap_content" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+
+                    android:text="性别：" />
+
+                <TextView
+                    android:id="@+id/stdIGender"
+                    android:layout_width="105dp"
+                    android:text="@{viewModel.stdGender}"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+
+                    android:text="班级：" />
+
+                <TextView
+                    android:id="@+id/stdClass"
+                    android:layout_width="105dp"
+                    android:text="@{viewModel.stdClass}"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+
+    </android.support.v7.widget.CardView>
+</layout>

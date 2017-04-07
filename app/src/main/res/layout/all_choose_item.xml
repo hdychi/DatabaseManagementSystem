@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.administrator.databasemanagementsystem.viewModels.ChooseItemViewModel"/>
+
+    </data>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="1dp"
+        app:cardElevation="1dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="选课信息:"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+
+                    android:text="学生学号：" />
+
+                <TextView
+                    android:id="@+id/frag2courId"
+                    android:layout_width="105dp"
+                    android:text="@{viewModel.stdId}"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+
+                    android:text="课程编号：" />
+
+                <TextView
+                    android:id="@+id/frag2courName"
+                    android:layout_width="wrap_content"
+                    android:text="@{viewModel.courId}"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+
+                    android:text="选课年份：" />
+
+                <TextView
+                    android:id="@+id/frag2TeacherName"
+                    android:layout_width="105dp"
+                    android:text="@{String.valueOf(viewModel.chooseYear)}"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+
+                    android:text="课程成绩：" />
+
+                <TextView
+                    android:id="@+id/frag2Credit"
+                    android:layout_width="105dp"
+                    android:text="@{String.valueOf(viewModel.grade)}"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</layout>
