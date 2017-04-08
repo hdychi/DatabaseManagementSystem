@@ -1,10 +1,12 @@
 package com.example.administrator.databasemanagementsystem.Models;
 
+import com.kelin.mvvmlight.base.ViewModel;
+
 /**
  * Created by Administrator on 2017/3/11.
  */
 
-public class Student {
+public class Student{
     public String getStdId() {
         return stdId;
     }
@@ -65,7 +67,7 @@ public class Student {
     }
     private String stdId;
     private String stdName;
-    private  String stdGender;
+    private String stdGender;
     private int stdAge;
     private  int stdYear;
     private String stdClass;

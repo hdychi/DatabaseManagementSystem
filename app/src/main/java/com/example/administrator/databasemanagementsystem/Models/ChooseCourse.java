@@ -1,10 +1,12 @@
 package com.example.administrator.databasemanagementsystem.Models;
 
+import com.kelin.mvvmlight.base.ViewModel;
+
 /**
  * Created by Administrator on 2017/3/11.
  */
 
-public class ChooseCourse {
+public class ChooseCourse{
     private String stdId;
     private String courId;
     private int chooseYear;

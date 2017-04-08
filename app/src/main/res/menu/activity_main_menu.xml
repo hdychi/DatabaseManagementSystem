@@ -9,6 +9,13 @@
         android:title="添加"
 
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/view_all"
+        android:orderInCategory="90"
+        android:title="查看全部"
+
+        app:showAsAction="ifRoom"/>
+
 
 
 </menu>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.administrator.databasemanagementsystem.viewModels.AllChooseViewModel"/>
+        <import type="me.tatarka.bindingcollectionadapter.LayoutManagers" />
+    </data>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            bind:itemView="@{viewModel.itemView}"
+            bind:items="@{viewModel.items}"
+            bind:layoutManager="@{LayoutManagers.linear()}"></android.support.v7.widget.RecyclerView>
+
+
+</layout>

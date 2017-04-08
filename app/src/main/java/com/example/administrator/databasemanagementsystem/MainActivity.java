@@ -18,6 +18,7 @@ import android.view.Window;
 import android.widget.Button;
 
 import com.example.administrator.databasemanagementsystem.Models.fragmentAdapter;
+import com.example.administrator.databasemanagementsystem.UI.Activities.ViewAllActivity;
 import com.example.administrator.databasemanagementsystem.UI.Fragments.CourseFragment;
 import com.example.administrator.databasemanagementsystem.UI.Activities.InsertChooseAcrivity;
 import com.example.administrator.databasemanagementsystem.UI.Activities.InsertCourseActivity;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     public void initialViews() {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle("学生选课信息管理系统");
+        mToolbar.setTitle("主页");
 
         setSupportActionBar(mToolbar);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -92,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     popupMenu.show();
+                }
+                else if(item.getItemId()==R.id.view_all){
+                    Intent intent = new Intent();
+                    intent.setClass(MainActivity.this, ViewAllActivity.class);
+                    startActivity(intent);
                 }
                 return true;
             }
