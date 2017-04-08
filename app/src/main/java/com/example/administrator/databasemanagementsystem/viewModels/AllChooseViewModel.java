@@ -2,6 +2,7 @@ package com.example.administrator.databasemanagementsystem.viewModels;
 
 import android.content.Context;
 import android.databinding.ObservableArrayList;
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableList;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ public class AllChooseViewModel implements ViewModel {
     }
     public ObservableList<ChooseItemViewModel> items = new ObservableArrayList<>();
     public ItemView itemView = ItemView.of(BR.viewModel, R.layout.all_choose_item);
+    public ObservableBoolean isRefresh = new ObservableBoolean();
     public void getData(DataBaseHelper helper){
         Subscriber<ChooseItemViewModel> subcriber = new Subscriber<ChooseItemViewModel>() {
             @Override
@@ -41,11 +43,13 @@ public class AllChooseViewModel implements ViewModel {
             @Override
             public void onError(Throwable e) {
                 Toast.makeText(mContext,"获取数据错误",Toast.LENGTH_SHORT).show();
+                isRefresh.set(false);
             }
 
             @Override
             public void onNext(ChooseItemViewModel chooseItemViewModel) {
                 items.add(chooseItemViewModel);
+                isRefresh.set(false);
             }
         };
         Observable.just(helper).map(new Func1<DataBaseHelper, List<ChooseCourse>>() {
