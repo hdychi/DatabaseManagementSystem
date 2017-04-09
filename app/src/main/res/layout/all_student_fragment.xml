@@ -12,7 +12,8 @@
       <android.support.v4.widget.SwipeRefreshLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          app:refreshing="@{viewModel.isRefresh}">
+          app:refreshing="@{viewModel.isRefresh}"
+          bind:onRefreshCommand="@{viewModel.onRefreshCommand}">
           <android.support.v7.widget.RecyclerView
               android:layout_width="match_parent"
               android:layout_height="wrap_content"

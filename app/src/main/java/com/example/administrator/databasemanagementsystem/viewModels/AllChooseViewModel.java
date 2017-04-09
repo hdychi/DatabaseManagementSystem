@@ -11,6 +11,7 @@ import com.example.administrator.databasemanagementsystem.DataBaseHelper;
 import com.example.administrator.databasemanagementsystem.Models.ChooseCourse;
 import com.example.administrator.databasemanagementsystem.R;
 import com.kelin.mvvmlight.base.ViewModel;
+import com.kelin.mvvmlight.command.ReplyCommand;
 
 import java.util.List;
 
@@ -33,7 +34,14 @@ public class AllChooseViewModel implements ViewModel {
     public ObservableList<ChooseItemViewModel> items = new ObservableArrayList<>();
     public ItemView itemView = ItemView.of(BR.viewModel, R.layout.all_choose_item);
     public ObservableBoolean isRefresh = new ObservableBoolean();
+    private DataBaseHelper mHelper;
+    public ReplyCommand onRefreshCommand = new ReplyCommand(()->{
+        getData(mHelper);
+    });
     public void getData(DataBaseHelper helper){
+        mHelper = helper;
+        items.clear();
+        isRefresh.set(true);
         Subscriber<ChooseItemViewModel> subcriber = new Subscriber<ChooseItemViewModel>() {
             @Override
             public void onCompleted() {

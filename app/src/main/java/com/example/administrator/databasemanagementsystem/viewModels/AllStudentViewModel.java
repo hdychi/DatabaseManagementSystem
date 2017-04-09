@@ -13,6 +13,7 @@ import com.example.administrator.databasemanagementsystem.DataBaseHelper;
 import com.example.administrator.databasemanagementsystem.Models.Student;
 import com.example.administrator.databasemanagementsystem.R;
 import com.kelin.mvvmlight.base.ViewModel;
+import com.kelin.mvvmlight.command.ReplyCommand;
 
 import java.util.List;
 
@@ -35,7 +36,13 @@ public class AllStudentViewModel implements ViewModel {
     public ObservableList<StudentItemViewModel> items = new ObservableArrayList<>();
     public ItemView itemView = ItemView.of(BR.viewModel, R.layout.all_student_item);
     public ObservableBoolean isRefresh = new ObservableBoolean();
+    private DataBaseHelper mHelper;
+    public ReplyCommand onRefreshCommand = new ReplyCommand(()->{
+        getData(mHelper);
+    });
     public void getData(DataBaseHelper helper){
+           mHelper = helper;
+           items.clear();
            isRefresh.set(true);
            Subscriber<Student> subscriber = new Subscriber<Student>() {
                @Override
