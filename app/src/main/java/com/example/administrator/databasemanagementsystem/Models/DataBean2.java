@@ -9,7 +9,7 @@ import java.util.List;
 public class DataBean2 {
     private Course course;
     private List<RecyclerItem> items;
-    private double averageGrade;
+
     private int under60;
     private int up60to69;
     private int up70to79;
@@ -17,8 +17,18 @@ public class DataBean2 {
     private int up90to9;
     private int fullScore;
     private int totalCount;
+    private double average;
+    public double getAverage() {
+        return average;
+    }
+
+    public void setAverage(double average) {
+        this.average = average;
+    }
+
+
     public int getTotalCount() {
-        return totalCount;
+        return items.size();
     }
 
     public void setTotalCount(int totalCount) {
@@ -29,13 +39,7 @@ public class DataBean2 {
 
 
 
-    public double getAverageGrade() {
-        return averageGrade;
-    }
 
-    public void setAverageGrade(double averageGrade) {
-        this.averageGrade = averageGrade;
-    }
 
     public int getUnder60() {
         return under60;

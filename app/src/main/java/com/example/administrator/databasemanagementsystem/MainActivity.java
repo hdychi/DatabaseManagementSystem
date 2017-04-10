@@ -23,6 +23,7 @@ import com.example.administrator.databasemanagementsystem.UI.Fragments.CourseFra
 import com.example.administrator.databasemanagementsystem.UI.Activities.InsertChooseAcrivity;
 import com.example.administrator.databasemanagementsystem.UI.Activities.InsertCourseActivity;
 import com.example.administrator.databasemanagementsystem.UI.Activities.InsertStudentActivity;
+import com.example.administrator.databasemanagementsystem.UI.Fragments.GradeFragment;
 import com.example.administrator.databasemanagementsystem.UI.Fragments.StudentFragment;
 
 import java.io.File;
@@ -106,11 +107,14 @@ public class MainActivity extends AppCompatActivity {
 
         tabs.add("学生查询");
         tabs.add("课程查询");
+        tabs.add("成绩查询");
         fragmentList = new ArrayList<Fragment>();
         StudentFragment studentFragment = new StudentFragment();
         CourseFragment courseFragment = new CourseFragment();
+        GradeFragment gradeFragment = new GradeFragment();
         fragmentList.add(studentFragment);
         fragmentList.add(courseFragment);
+        fragmentList.add(gradeFragment);
         FragmentManager fm = getSupportFragmentManager();
         fragmentAdapter = new fragmentAdapter(fm, fragmentList);
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
@@ -119,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setCurrentItem(0);
         tabLayout.setupWithViewPager(viewPager);
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             tabLayout.getTabAt(i).setText(tabs.get(i));
         }
 

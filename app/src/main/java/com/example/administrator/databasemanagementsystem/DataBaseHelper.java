@@ -127,7 +127,7 @@ public class DataBaseHelper {
                 return null;
             }
             else{
-                Cursor cursor = mDatabase.rawQuery("select * from ChooseCourse where stdId="+"'"+student+"'"+" and courName="+"'"+course+"'",null);
+                Cursor cursor = mDatabase.rawQuery("select * from ChooseCourse where stdId=? and courName=?",new String[]{student,course});
                 if(cursor!=null&&cursor.moveToFirst()) {
                    // if (cursor.moveToNext()) {
                         ChooseCourse chooseCourse = new ChooseCourse(cursor.getString(0), cursor.getString(1), cursor.getInt(2), cursor.getInt(3));
@@ -139,7 +139,7 @@ public class DataBaseHelper {
         }
         else{
             if(course.charAt(0)>='0'&&course.charAt(0)<='9'){
-                Cursor cursor = mDatabase.rawQuery("select * from ChooseCourse where stdName="+"'"+student+"'"+" and courId="+"'"+course+"'",null);
+                Cursor cursor = mDatabase.rawQuery("select * from ChooseCourse where stdName=? and courId=?",new String[]{student,course});
                 if(cursor!=null&&cursor.moveToFirst()) {
                    // if (cursor.moveToNext()) {
                         ChooseCourse chooseCourse = new ChooseCourse(cursor.getString(0), cursor.getString(1), cursor.getInt(2), cursor.getInt(3));
@@ -149,7 +149,7 @@ public class DataBaseHelper {
                 return null;
             }
             else{
-                Cursor cursor = mDatabase.rawQuery("select * from ChooseCourse where stdName="+"'"+student+"'"+" and courName="+"'"+course+"'",null);
+                Cursor cursor = mDatabase.rawQuery("select * from ChooseCourse where stdName=? and courName=?",new String[]{student,course});
                 if(cursor!=null&&cursor.moveToFirst()) {
                    // if (cursor.moveToNext()) {
                         ChooseCourse chooseCourse = new ChooseCourse(cursor.getString(0), cursor.getString(1), cursor.getInt(2), cursor.getInt(3));
@@ -206,7 +206,7 @@ public class DataBaseHelper {
     public double getStudentGPA(String stdId){
         List<ChooseCourse> chooseCourses = getChooseCourseWithStudent(stdId);
         double res = 0.0;
-        int totalCredit = 0;
+       /* int totalCredit = 0;
         for(ChooseCourse chooseCourse:chooseCourses){
             Course course = getCourseWithId(chooseCourse.getCourId());
             res+=course.getCourCredit()*chooseCourse.getGrade();
@@ -214,6 +214,13 @@ public class DataBaseHelper {
         }
         if(totalCredit>0) {
             res = res / totalCredit;
+        }*/
+        Cursor cursor = mDatabase.rawQuery("select avg(grade) from ChooseCourse where stdId=? group by stdId",new String[]{stdId});
+        if(cursor!=null&&cursor.moveToFirst()){
+            while(!cursor.isAfterLast()){
+                res = cursor.getDouble(0);
+                cursor.moveToNext();
+            }
         }
         return res;
     }
@@ -246,6 +253,28 @@ public class DataBaseHelper {
         }
 
 
+    }
+    public double getCouseAverage(String courId){
+        double res = 0.0;
+        Cursor cursor = mDatabase.rawQuery("select avg(grade) from ChooseCourse where courId=? group by courId",new String[]{courId});
+        if(cursor!=null&&cursor.moveToFirst()){
+            while(!cursor.isAfterLast()){
+                res = cursor.getDouble(0);
+                cursor.moveToNext();
+            }
+        }
+        return res;
+    }
+    public  int getCountOfRangeGrade(String courId,int lowbound,int upperbound){
+        int res = 0;
+        Cursor cursor = mDatabase.rawQuery("select count(*) from ChooseCourse  where courId=? and grade between ? and ? group by courId",new String[]{courId,lowbound+"",upperbound+""});
+        if(cursor!=null&&cursor.moveToFirst()){
+            while (!cursor.isAfterLast()){
+                res = cursor.getInt(0);
+                cursor.moveToNext();
+            }
+        }
+        return  res;
     }
     public void insertStudent(String stdId,String stdName,String stdGender,int stdAge,int stdYear,String stdClass){
         mDatabase.execSQL("insert into Student(stdId,stdName,stdGender,stdAge,stdInYear,stdClass) values (?,?,?,?,?,?);",

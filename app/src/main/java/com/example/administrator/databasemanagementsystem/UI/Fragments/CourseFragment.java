@@ -206,16 +206,26 @@ public class CourseFragment extends Fragment {
 
     }
     public void getData(){
+
         Observable<DataBean2> observable = Observable.create(new Observable.OnSubscribe<DataBean2>() {
             @Override
             public void call(Subscriber<? super DataBean2> subscriber) {
+
                 Course course = getCourseInformation(editText.getText().toString());
                 List<RecyclerItem> items = getItems(course);
-                List<Integer> grades = getAverage(course);
+
+                Log.i("获取课程编号",course.getCourId());
                 DataBean2 bean = new DataBean2();
                 bean.setCourse(course);
                 bean.setItems(items);
-                setGradesForBean(grades,bean);
+                bean.setUnder60(helper.getCountOfRangeGrade(course.getCourId(),0,59));
+                bean.setUp60to69(helper.getCountOfRangeGrade(course.getCourId(),60,69));
+                bean.setUp70to79(helper.getCountOfRangeGrade(course.getCourId(),70,79));
+                bean.setUp80to89(helper.getCountOfRangeGrade(course.getCourId(),80,89));
+                bean.setUp90to9(helper.getCountOfRangeGrade(course.getCourId(),90,99));
+                bean.setFullScore(helper.getCountOfRangeGrade(course.getCourId(),100,100));
+                bean.setAverage(helper.getCouseAverage(course.getCourId()));
+
                 subscriber.onNext(bean);
             }
         });
@@ -227,6 +237,7 @@ public class CourseFragment extends Fragment {
 
             @Override
             public void onError(Throwable e) {
+                Log.i("捕捉到","异常");
                 if(e instanceof IOException){
                     Log.i("IOE","EXception");
 
@@ -249,6 +260,7 @@ public class CourseFragment extends Fragment {
 
             @Override
             public void onNext(DataBean2 dataBean) {
+                Log.i("数据正常","返回");
                 mAdapter.clear();
                 courId.setText(dataBean.getCourse().getCourId()==null?"无":dataBean.getCourse().getCourId());
                 courName.setText(dataBean.getCourse().getCourName());
@@ -290,56 +302,8 @@ public class CourseFragment extends Fragment {
         }
         return res;
     }
-    public List<Integer> getAverage(Course course){
-        List<Integer> res = new ArrayList<>();
-        List<ChooseCourse> chooseCourses = new DataBaseHelper(db).getChooseCourseWithCourse(course.getCourId());
-        for(ChooseCourse chooseCourse:chooseCourses){
 
 
-            res.add(chooseCourse.getGrade());
-        }
-        return res;
-    }
-    public void setGradesForBean(List<Integer> grades,DataBean2 bean){
-        int totalStudent = 0;
-        int totalGrades = 0;
-        int under60 = 0;
-        int up60to69 = 0;
-        int up70to79 = 0;
-        int up80to89 = 0;
-        int up90to9 = 0;
-        int fullScore = 0;
-        for(Integer score:grades){
-            totalStudent++;
-            totalGrades+=score;
-            if(score<60){
-                under60++;
-            }
-            else if(score<70){
-                up60to69++;
-            }
-            else if(score<80){
-                up70to79++;
-            }
-            else if(score<90){
-                up80to89++;
-            }
-            else if(score<100){
-                up90to9++;
-            }
-            else{
-                fullScore++;
-            }
-        }
-        bean.setTotalCount(totalStudent);
-        bean.setAverageGrade(((double)totalGrades)/totalStudent);
-        bean.setUnder60(under60);
-        bean.setUp60to69(up60to69);
-        bean.setUp70to79(up70to79);
-        bean.setUp80to89(up80to89);
-        bean.setUp90to9(up90to9);
-        bean.setFullScore(fullScore);
-    }
     public void updateChart(DataBean2 bean2){
         List<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(((float) bean2.getUnder60())/bean2.getTotalCount(),"不及格"));
@@ -353,8 +317,8 @@ public class CourseFragment extends Fragment {
         PieData data = new PieData(set);
         DecimalFormat    df   = new DecimalFormat("######0.00");
         mChart.setData(data);
-        mChart.setCenterTextSize(5);
-        mChart.setCenterText("课程平均分:"+df.format(bean2.getAverageGrade()));
+        mChart.setCenterTextSize(7);
+        mChart.setCenterText("课程平均分:"+df.format(bean2.getAverage()));
         mChart.invalidate();
        // yVals.add(new Entry((double)up);
 
