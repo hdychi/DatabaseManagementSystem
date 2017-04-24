@@ -225,33 +225,15 @@ public class DataBaseHelper {
         return res;
     }
     public double getClassGPA(String className){
-       Cursor cursor = mDatabase.rawQuery("select * from Student where stdClass=?",new String[]{className});
+
         double res = 0.0;
-        int cnt = 0;
-        if(cursor!=null&&cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-
-
-                    Student temp = new Student(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3), cursor.getInt(4), cursor.getString(5));
-                    if(getStudentGPA(temp.getStdId())!=0){
-                        res += getStudentGPA(temp.getStdId());
-                        cnt++;
-                    }
-
-                    cursor.moveToNext();
-
-
-            }
-            if(cnt!=0) {
-                res = res / cnt;
-            }
-            return  res;
-
+        
+        Cursor cursor = mDatabase.rawQuery("select avg(ChooseCourse.grade) from Student, " +
+                "ChooseCourse where Student.stdClass=? and Student.stdId=ChooseCourse.stdId group by stdClass" ,new String[]{className});
+        if(cursor!=null&&cursor.moveToFirst()){
+            res = cursor.getDouble(0);
         }
-        else {
-            return 0;
-        }
-
+        return res;
 
     }
     public double getCouseAverage(String courId){
